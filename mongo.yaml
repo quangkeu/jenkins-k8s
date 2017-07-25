@@ -12,7 +12,7 @@ spec:
     name: mongo
 ---
 apiVersion: extension/v1beta1
-kind: ReplicationController
+kind: Deployment
 metadata:
   labels:
     name: mongo
