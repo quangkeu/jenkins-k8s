@@ -14,7 +14,7 @@ spec:
     name: nodejs
 ---
 apiVersion: extension/v1beta1
-kind: ReplicationController
+kind: Deployment
 metadata:
   labels:
     name: nodejs
