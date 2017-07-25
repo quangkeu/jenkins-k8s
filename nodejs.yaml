@@ -1,38 +1,38 @@
 apiVersion: extension/v1beta1
 kind: Service
 metadata:
- name: nodejs
- labels:
   name: nodejs
+  labels:
+    name: nodejs
 spec:
- type: NodePort
- ports:
-  - port: 80
-    targetPort: 3000
-    protocol: TCP
- selector:
-  name: nodejs
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    name: nodejs
 ---
 apiVersion: extension/v1beta1
 kind: ReplicationController
 metadata:
- labels:
-  name: nodejs
- name: nodejs-controller
-spec:
- replicas:
- selector:
-  name: nodejs
- template:
-  metadata:
-   labels:
+  labels:
     name: nodejs
-  spec:
-   containers:
-   - image: node:0.10.40
-     command: ['/bin/sh', '-c']
-     args: ['cd /home && git clone https://github.com/ijason/NodeJS-Sample-App.git demo && cd demo/EmployeeDB/ && npm install && sed -i -- ''s/localhost/mongo/g'' app.js && node app.js']
-     name: nodejs
-     ports:
-     - containerPort: 3000
-       name: http-server
+  name: nodejs-controller
+spec:
+  replicas: 2
+  selector:
+    name: nodejs
+  template:
+    metadata:
+      labels:
+        name: nodejs
+    spec:
+      containers:
+      - image: node:0.10.40
+        command: ['/bin/sh', '-c']
+        args: ['cd /home && git clone https://github.com/ijason/NodeJS-Sample-App.git demo && cd demo/EmployeeDB/ && npm install && sed -i -- ''s/localhost/mongo/g'' app.js && node app.js']
+        name: nodejs
+        ports:
+        - containerPort: 3000
+          name: http-server
