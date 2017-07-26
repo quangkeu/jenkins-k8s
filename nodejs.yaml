@@ -29,9 +29,11 @@ spec:
         name: node-cellar
     spec:
       containers:
-      - image: sonvn/nodecellar
+      - image: sonvn/node-cellar-v1
         name: node-cellar
-        env: MONGO_HOST=mongo
+        env: 
+        - name: MONGO_HOST
+          value: mongo
         ports:
         - containerPort: 3000
     
