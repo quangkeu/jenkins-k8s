@@ -6,7 +6,7 @@ MAINTAINER sonvn
 RUN mkdir -p /usr/api
 COPY . /usr/api
 WORKDIR /usr/api
-RUN npm install --production
+#RUN npm install --product
 
 ENV PORT 3000
 EXPOSE $PORT
