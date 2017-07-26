@@ -18,7 +18,7 @@ kind: ReplicationController
 metadata:
   labels:
     name: node-cellar
-  name: noce-cellar-controller
+  name: node-cellar-controller
 spec:
   replicas: 2
   selector:
