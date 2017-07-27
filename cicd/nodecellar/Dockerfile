@@ -3,6 +3,8 @@
 FROM node:6
 MAINTAINER sonvn
 
+USER root
+
 RUN mkdir -p /usr/api
 COPY . /usr/api
 WORKDIR /usr/api
