@@ -1,0 +1,29 @@
+node('jnlp-slave') {
+    sh "echo 'nameserver 8.8.8.8' >> /etc/resolv.conf"
+    stage('Cloning') {
+        sh """
+        git clone https://github.com/cloudify-cosmo/nodecellar.git
+        git clone https://github.com/quangkeu/jenkins-k8s.git
+        """
+    }
+    stage('Build Dockerfile') {
+        sh """
+        cp ./jenkins-k8s/cicd/nodecellar/Dockerfile ./nodecellar
+        cd ./nodecellar
+        wget https://nodejs.org/download/release/v6.11.1/node-v6.11.1-headers.tar.gz
+        tar -xvf node-v6.11.1-headers.tar.gz
+        docker build -t admin/node-cellar-v10 .
+        docker login -u admin -p admin123 10.84.20.62:8082
+        docker login -u admin -p admin123 10.84.20.62:8083
+        docker tag admin/node-cellar-v10 10.84.20.62:8083/admin/node-cellar-v10
+        docker push 10.84.20.62:8083/admin/node-cellar-v10
+        """
+    }
+    stage('Deploy nodecellar') {
+        sh """
+        kubectl apply -f /home/jenkins/workspace/nodecellar-deployment/jenkins-k8s/mongo.yaml
+        kubectl apply -f /home/jenkins/workspace/nodecellar-deployment/jenkins-k8s/node-cellar.yaml
+        """
+    }
+    
+}
