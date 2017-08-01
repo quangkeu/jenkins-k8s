@@ -1,4 +1,0 @@
-spring:
-  thymeleaf:
-    cache: false
-apiEndpointUrl: http://localhost:8090/api/
