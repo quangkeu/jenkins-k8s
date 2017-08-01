@@ -10,7 +10,8 @@ podTemplate(label: 'maven', containers: [
                 git 'https://github.com/quangkeu/jenkins-k8s.git'
                 container('maven') {
                     sh """
-                    mvn clean deploy
+                    whoami
+                    ls
                     """
                 }
             }
