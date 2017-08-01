@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Devices</title>
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/colors.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+
+    <!-- Core JS files -->
+    <script type="text/javascript" src="assets/js/plugins/loaders/pace.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/libraries/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/loaders/blockui.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/ui/nicescroll.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/ui/drilldown.js"></script>
+    <!-- /core JS files -->
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="assets/js/plugins/tables/datatables/datatables.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/select.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
+
+    <script type="text/javascript" src="assets/js/core/app.js"></script>
+    <script type="text/javascript" src="assets/js/pages/datatables_extension_select.js"></script>
+
+    <script type="text/javascript" src="assets/js/plugins/ui/ripple.min.js"></script>
+    <!-- /theme JS files -->
+
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="page-container">
+        <div class="panel panel-white">
+            <div class="panel-heading">
+                <h4 class="panel-title">Devices</h4>
+                <div class="heading-elements">
+                    <ul class="pagination pagination-flat pagination-sm">
+                        <li><a href="#" class="legitRipple">←</a></li>
+                        <li><a href="#" class="legitRipple">1</a></li>
+                        <li class="active"><a href="#" class="legitRipple">2</a></li>
+                        <li><a href="#" class="legitRipple">3</a></li>
+                        <li><a href="#" class="legitRipple">→</a></li>
+                    </ul>
+                </div>
+                <a class="heading-elements-toggle"><i class="icon-more"></i></a></div>
+
+            <div class="panel-body">
+
+                <div class="datatable-scroll">
+                    <table class="table datatable-sorting dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                        <thead>
+                        <tr role="row">
+                            <th class="select-checkbox sorting_disabled" rowspan="1" colspan="1" aria-label=""></th>
+                            <th th:each="key : ${indexParams.keySet()}" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" th:text="${indexParams.get(key)}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="device:${devices}" role="row">
+                            <td class="select-checkbox">
+                            </td>
+                            <td th:each="key : ${indexParams.keySet()}" th:text="${device.parameters.get(key)}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Devices</title>
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+
+    <!-- Core JS files -->
+    <script type="text/javascript" src="/assets/js/plugins/loaders/pace.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/loaders/blockui.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/nicescroll.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/drilldown.js"></script>
+    <!-- /core JS files -->
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="/ump/ump.js"></script>
+    <!-- /theme JS files -->
+
+
+</head>
+<body>
+<div class="page-container" layout:fragment="content">
+    <div class="page-content">
+        <div class="sidebar sidebar-main sidebar-default">
+            <div class="sidebar-content">
+                <div class="sidebar-category sidebar-category-visible">
+                    <div class="category-content no-padding">
+                        <ul class="navigation navigation-main navigation-accordion">
+                            <li class="navigation-header">
+                                <span>Device Types<i id="create-device-type-dialog-opener" class="icon-plus-circle2"></i></span>
+                            </li>
+                            <li th:each="keyL1:${deviceTypeNodes.keySet()}" class="">
+                                <a href="#" class="has-ul legitRipple">
+                                    <span th:text="${keyL1}"></span>
+                                </a>
+                                <ul class="hidden-ul" style="display: none;">
+                                    <li class="" th:each="keyL2:${deviceTypeNodes.get(keyL1).keySet()}">
+                                        <a href="#" class="has-ul legitRipple" th:text="${keyL2}"></a>
+                                        <ul class="hidden-ul" style="display: none;">
+                                            <li th:each="deviceType:${deviceTypeNodes.get(keyL1).get(keyL2)}"><a href="#" th:text="${deviceType.firmwareVersion}"></a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper">
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <h6 class="panel-title">Basic tabs</h6>
+                    <div class="heading-elements">
+                        <!--<ul class="icons-list">-->
+                            <!--<li><a data-action="collapse"></a></li>-->
+                            <!--<li><a data-action="reload"></a></li>-->
+                            <!--<li><a data-action="close"></a></li>-->
+                        <!--</ul>-->
+                    </div>
+                    <a class="heading-elements-toggle"><i class="icon-more"></i></a></div>
+
+                <div class="panel-body">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#basic-tab1" data-toggle="tab" class="legitRipple" aria-expanded="true">Overview</a></li>
+                            <li class=""><a href="#basic-tab2" data-toggle="tab" class="legitRipple" aria-expanded="false">Tags</a></li>
+                            <li class=""><a href="#basic-tab3" data-toggle="tab" class="legitRipple" aria-expanded="false">Assigning</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="basic-tab1">
+                                Basic tabs example using <code>.nav-tabs</code> class. Also requires base <code>.nav</code> class.
+                            </div>
+
+                            <div class="tab-pane" id="basic-tab2">
+                                Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid laeggin.
+                            </div>
+
+                            <div class="tab-pane" id="basic-tab3">
+                                DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg whatever.
+                            </div>
+
+                            <div class="tab-pane" id="basic-tab4">
+                                Aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthet.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Horizontal form -->
+        <div id="create-device-type-dialog" title="New Device Type">
+            <form action="#" class="form-horizontal" th:action="@{/device-types}" th:object="${deviceTypeDecorator}" method="POST">
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Name</label>
+                    <div class="col-sm-9">
+                        <input th:field="*{name}" type="text" placeholder="" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Manufacturer</label>
+                    <div class="col-sm-9">
+                        <input th:field="*{manufacturer}" type="text" placeholder="" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-3">OUI</label>
+                    <div class="col-sm-9">
+                        <input th:field="*{oui}" type="text" placeholder="" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Product Class</label>
+                    <div class="col-sm-9">
+                        <input th:field="*{productClass}" type="text" placeholder="" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Firmware version</label>
+                    <div class="col-sm-9">
+                        <input th:field="*{firmwareVersion}" type="text" placeholder="" class="form-control">
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary legitRipple">Submit <i class="icon-arrow-right14 position-right"></i></button>
+                </div>
+            </form>
+        </div>
+        <!-- /horizontal form -->
+
+    </div>
+</div>
+</body>
+</html>
