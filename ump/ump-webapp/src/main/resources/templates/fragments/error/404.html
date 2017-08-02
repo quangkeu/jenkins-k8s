@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</head>
+<body>
+
+<div layout:fragment="content" class="page-container">
+    <div class="page-content">
+        <!-- Main content -->
+        <div class="content-wrapper">
+
+            <!-- Error title -->
+            <div class="text-center content-group">
+                <h1 class="error-title">404</h1>
+                <h5>Oops, an error has occurred. Page not found!</h5>
+            </div>
+            <!-- /error title -->
+
+
+            <!-- Error content -->
+            <div class="row">
+                <div class="col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3">
+                    <!--<form action="#" class="main-search panel panel-body">-->
+                    <!--<div class="form-group has-feedback">-->
+                    <!--<input type="text" class="form-control input-lg" placeholder="Search...">-->
+                    <!--<div class="form-control-feedback">-->
+                    <!--<i class="icon-search4 text-size-large text-muted"></i>-->
+                    <!--</div>-->
+                    <!--</div>-->
+
+                    <div class="text-center">
+                        <a href="javascript:void(0);" class="btn bg-pink-400" onclick="goBack()"><i class="icon-circle-left2 position-left"></i> Back</a>
+                    </div>
+                    <!--</form>-->
+                </div>
+            </div>
+            <!-- /error wrapper -->
+
+        </div>
+        <!-- /main content -->
+    </div>
+</div>
+
+</body>
+</html>

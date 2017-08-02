@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<!-- assigning tab-->
+<div ng-class="{'active': tabActive == 'assigning-tab' || tabActive == 'left-tab-overview' || tabActive == 'left-tab-configuration' || tabActive == 'left-tab-provisioning'}" th:fragment="assigning_tab" class="tab-pane" id="assigning-tab">
+
+    <div th:replace="data_models/dialog/confirm_delete_tag_assigned::confirm_delete_tag_assigned"></div>
+
+    <div class="tabbable nav-tabs-vertical nav-tabs-left">
+        <ul class="nav nav-tabs nav-tabs-highlight" style="width: 190px !important;">
+            <li ng-class="{'active': tabActive == 'left-tab-overview' || tabActive == 'assigning-tab' || tabActive == 'overview-tab' || tabActive == 'tags-tab' || tabActive == ''}"><a href="#left-tab-overview" data-toggle="tab"> Overview's Tag</a></li>
+            <li ng-class="{'active': tabActive == 'left-tab-configuration'}"><a href="#left-tab-configuration" data-toggle="tab"> Configuration's Tag</a></li>
+            <li ng-class="{'active': tabActive == 'left-tab-provisioning'}"><a href="#left-tab-provisioning" data-toggle="tab"> Provisioning's Tag</a></li>
+        </ul>
+
+        <div class="tab-content">
+
+            <!--Left tab overview-->
+            <div ng-class="{'active': tabActive == 'left-tab-overview' || tabActive == 'assigning-tab' || tabActive == 'overview-tab' || tabActive == 'tags-tab' || tabActive == ''}" class="tab-pane" id="left-tab-overview">
+
+                <input type="text" style="display: none;" id="currentDeviceTypeVersionId" name="currentDeviceTypeVersionId" th:value="${currentDeviceTypeVersion.id}">
+
+                <div th:replace="data_models/dialog/assign_tag_overview_dialog::assign_tag_overview_dialog"></div>
+
+                <h5> List tags <i ng-click="assignTagOverview()" class="icon-plus3" id="assign-tag-overview-action-add" style="cursor: pointer" title="Assign tag"></i></h5>
+                <hr>
+
+                <div ng-show="listTagAssigned.overview.length == 0" class="alert alert-info no-border" style="margin-top: 20px">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold">No tag yet</span>
+                </div>
+
+                <div class="table-responsive" ng-show="listTagAssigned.overview.length > 0">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="tag in listTagAssigned.overview">
+                            <td> {{tag.name}}</td>
+                            <td> {{tag.type}}</td>
+                            <td nowrap>
+                                <ul class="icons-list">
+                                    <li><a ng-click="editTagOverview(tag)" href="javascript:void(0)"><i class="icon-pencil7"></i></a></li>
+                                    <li><a ng-click="deleteTagAssigned(tag.id)" href="javascript:void(0)"><i class="icon-trash"></i></a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <!--/Left tab overview-->
+
+            <!--Left tab configuration-->
+            <div ng-class="{'active': tabActive == 'left-tab-configuration'}" class="tab-pane" id="left-tab-configuration">
+
+                <div th:replace="data_models/dialog/assign_tag_configuration_dialog::assign_tag_configuration_dialog"></div>
+
+                <h5> List tags <i ng-click="assignTagConfiguration()" class="icon-plus3" id="assign-tag-configuration-action-add" style="cursor: pointer" title="Assign tag"></i></h5>
+                <hr>
+
+                <div ng-show="listTagAssigned.configuration.length == 0" class="alert alert-info no-border"
+                     style="margin-top: 20px">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span
+                            class="sr-only">Close</span></button>
+                    <span class="text-semibold">No tag yet</span>
+                </div>
+
+                <div class="table-responsive" ng-show="listTagAssigned.configuration.length > 0">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="tag in listTagAssigned.configuration">
+                            <td> {{tag.name}}</td>
+                            <td> {{tag.type}}</td>
+                            <td nowrap>
+                                <ul class="icons-list">
+                                    <li><a ng-click="editTagConfiguration(tag)" href="javascript:void(0)"><i class="icon-pencil7"></i></a></li>
+                                    <li><a ng-click="deleteTagAssigned(tag.id)" href="javascript:void(0)"><i class="icon-trash"></i></a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--/Left tab configuration-->
+
+            <div ng-class="{'active': tabActive == 'left-tab-provisioning'}" class="tab-pane" id="left-tab-provisioning">
+
+                <div th:replace="data_models/dialog/assign_tag_provisioning_dialog::assign_tag_provisioning_dialog"></div>
+
+                <h5> List tags <i ng-click="assignTagProvisioning()" class="icon-plus3" style="cursor: pointer" title="Assign tag"></i></h5>
+                <hr>
+
+                <div ng-show="listTagAssigned.provisioning.length == 0" class="alert alert-info no-border"
+                     style="margin-top: 20px">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span
+                            class="sr-only">Close</span></button>
+                    <span class="text-semibold">No tag yet</span>
+                </div>
+
+                <div class="table-responsive" ng-show="listTagAssigned.provisioning.length > 0">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="tag in listTagAssigned.provisioning">
+                            <td> {{tag.name}}</td>
+                            <td> {{tag.type}}</td>
+                            <td nowrap>
+                                <ul class="icons-list">
+                                    <li><a ng-click="editTagProvisioning(tag)" href="javascript:void(0)"><i class="icon-pencil7"></i></a></li>
+                                    <li><a ng-click="deleteTagAssigned(tag.id)" href="javascript:void(0)"><i class="icon-trash"></i></a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /assigning tab -->
+
+</body>
+</html>

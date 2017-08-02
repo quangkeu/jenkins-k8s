@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div th:fragment="no_data_result" class="alert alert-info no-border">
+    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only" th:text="#{button.close}">Close</span>
+    </button>
+    <span class="text-semibold" th:text="#{alert.noData}">No data result.</span>
+</div>
+
+</body>
+</html>

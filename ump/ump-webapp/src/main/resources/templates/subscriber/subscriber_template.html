@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UMP | Subscriber Template</title>
+
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/full.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_all.min.js"></script>
+
+    <!-- App js files -->
+    <script type="text/javascript" src="/ump/subscriber_template.js"></script>
+
+    <style>
+        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+            border-top: 0;
+            padding: 3px 20px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="page-container" layout:fragment="content">
+
+
+
+    <div class="page-content">
+
+        <!--Sidebar menu-->
+        <div th:replace="subscriber/fragments/subscriber_template_tree::subscriber_template_tree"></div>
+        <!--/Sidebar menu-->
+
+        <div class="content-wrapper">
+            <div class="panel panel-flat">
+                <div class="panel-body">
+
+                    <div th:if="${noSubscriberTemplate}">
+                        <div th:replace="fragments/alert/no_data_result::no_data_result"></div>
+                    </div>
+
+                    <div th:if="!${noSubscriberTemplate}">
+                        <form  class="form-horizontal form-edit-subscriber-template" action="#" th:action="@{'/subscriber-template/update/' + ${currentSubscriberTemplate.id}}" method="POST">
+                            <fieldset class="content-group">
+                                <legend class="text-bold"> <span th:text="${currentSubscriberTemplate.name}"></span></legend>
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2"> <span th:text="#{subscriberTemplate.label.name}"></span> <span class="text-danger">*</span></label>
+                                    <div class="col-lg-10">
+                                        <input type="text" name="name" class="form-control" placeholder="Write a name..." required="required" th:value="${currentSubscriberTemplate.name}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2"> <span th:text="#{subscriberTemplate.label.listDataNames}"></span></label>
+                                    <div class="col-lg-10">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th> <span th:text="#{subscriberTemplate.label.name}"></span> <span class="text-danger">*</span></th>
+                                                    <th width="100px"> <span th:text="#{subscriberTemplate.label.action}"></span></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="list-subscriber-data-name-row">
+
+                                                <tr th:each="dataName, obj:${currentSubscriberTemplate.templateKeys}" class="subscriber-data-name-row" th:attr="rowOrder=${obj.count}">
+                                                    <td> <input type="text" class="form-control" placeholder="Write a data name..." required="required" th:name="@{'dataName_' + ${obj.count}}" th:value="${dataName}" > </td>
+                                                    <td> <a type="button" class="btn btn-icon btn-default btn-xs btn-remove-data-name" th:attr="rowOrder=${obj.count}"><i class="icon-minus3"></i></a> </td>
+                                                </tr>
+
+                                                <tr class="subscriber-data-name-row" th:attr="rowOrder=${indexNextRow}">
+                                                    <td><input type="text" th:name="@{'dataName_' + ${indexNextRow}}" class="form-control" placeholder="Write a data name..."> </td>
+                                                    <td> <a type="button" class="btn btn-icon btn-default btn-xs btn-remove-data-name" th:attr="rowOrder=${indexNextRow}"><i class="icon-minus3"></i></a> </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+                            <div class="text-right">
+                                <a href="javascript:void(0);" class="btn btn-danger" id="confirm-delete-subscriber-template-opener"> <span th:text="#{button.delete}">Delete</span> <i class="icon-trash position-right"></i></a>
+                                <button type="submit" class="btn btn-primary"> <span th:text="#{button.save}">Save</span> <i class="icon-arrow-right14 position-right"></i></button>
+                                <button type="button" class="btn btn-default" onclick="location.reload();"> <span th:text="#{button.cancel}">Cancel</span></button>
+                            </div>
+                        </form>
+
+                        <!--dialog-->
+                        <div th:replace="subscriber/dialog/confirm_delete_dialog::confirm_delete_dialog"></div>
+                        <!-- /dialog -->
+                    </div>
+
+                    <!--dialog-->
+                    <div th:replace="subscriber/dialog/create_subsciber_template_dialog::create_subsciber_template_dialog"></div>
+                    <!-- /dialog -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

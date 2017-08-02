@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> </head>
+<body>
+<!--upload data model dialog-->
+<div th:if="${currentDeviceTypeVersion != null}" th:fragment="upload_data_model_dialog" id="upload-data-model-dialog" title="Upload Data Model">
+    <form class="form-horizontal" action="#" method="POST" th:action="@{/data-models/upload}" enctype="multipart/form-data">
+        <input type="hidden" name="deviceTypeVersionId" th:value="${currentDeviceTypeVersion.id}">
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">Data model:</label>
+            <div class="col-lg-9">
+                <input id="fileImportDataModel" type="file" name="dataModelFile" class="file-styled"
+                       accept=".csv"
+                       onchange="validateFileUpload(this, '.csv')">
+                <div style="display: none" class="text-danger" id="file-data-model-error-message" th:text="#{error.data.model.not.support.file.extension}"></div>
+            </div>
+        </div>
+
+        <div class="text-right">
+            <button id="importFileBtn" type="submit" class="btn btn-primary legitRipple">Submit <i class="icon-arrow-right14 position-right"></i></button>
+        </div>
+    </form>
+</div>
+<!--/upload data model dialog -->
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>UMP | Policy Configuration</title>
+
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/anytime.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/uniform.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+
+    <script type="text/javascript" src="/ump/policy.js"></script>
+    <script type="text/javascript" src="/ump/policy_configuration_show.js"></script>
+</head>
+<body>
+<div class="page-container" layout:fragment="content">
+    <div class="page-content">
+
+        <div th:replace="policy/fragments/policy_sidebar::policy_sidebar"></div>
+
+        <div class="content-wrapper">
+            <div class="panel panel-flat">
+                <div class="panel-body">
+
+                    <div class="btn-group">
+                        <a href="/policy" class="btn btn-raised legitRipple btn-primary"> <i class="position-left icon-info22"></i> Info</a>
+                        <a th:href="${'/policy/log/' + policyJob.id}" class="btn btn-raised legitRipple btn-default"> <i class="position-left icon-history"></i> Log</a>
+                    </div>
+
+                    <h5 class="text-center">UPDATE CONFIGURATION: <span th:text="${policyJob.name}"></span></h5>
+
+                    <form action="" class="form-horizontal">
+
+                        <fieldset class="content-group" th:if="${deviceGroup != null}">
+                            <legend class="text-bold">TARGETED DEVICES</legend>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right"></label>
+                                        <label class="control-label col-md-9" th:text="${deviceGroup.name}"> </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right">Manufacturer: </label>
+                                        <label class="control-label col-md-9" th:text="${deviceGroup.manufacturer}"> </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right">Model Name: </label>
+                                        <label class="control-label col-md-9" th:text="${deviceGroup.modelName}"> </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right">Firmware/Software Version: </label>
+                                        <label class="control-label col-md-9" th:text="${deviceGroup.firmwareVersion}"> </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right">Label: </label>
+                                        <label class="control-label col-md-9" th:text="${deviceGroup.label}"> </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="content-group">
+                            <legend class="text-bold">SCHEDULE</legend>
+                            <div class="row" th:if="${!policyJob.isImmediately}">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right">Start At: </label>
+                                        <label class="control-label col-md-9" th:text="${#dates.format(policyJob.startAt, 'dd-MM-yyyy HH:mm:ss')}"> </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right">Time interval (hs): </label>
+                                        <label class="control-label col-md-9" th:text="${policyJob.timeInterval}"> </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right">Max number of devices/interval: </label>
+                                        <label class="control-label col-md-9" th:text="${policyJob.maxNumber}"> </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right">Number of executions: </label>
+                                        <label class="control-label col-md-9" th:text="${policyJob.limited}"> </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" th:if="${policyJob.isImmediately}">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 text-right">Is Immediately </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="content-group">
+                            <legend class="text-bold">CONFIGURATION</legend>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="table-scrollable">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>Parameter</th>
+                                                <th>Value</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="list-parameters">
+                                            <tr th:each="parameterKey:${policyJob.parameters.keySet()}">
+                                                <td th:text="${parameterKey}"></td>
+                                                <td th:text="${policyJob.parameters.get(parameterKey).value}"></td>
+                                            </tr>
+                                            </tbody>
+                                            <!--<tr class="list-parameters-no-data">-->
+                                                <!--<td colspan="10" align="center">No data.</td>-->
+                                            <!--</tr>-->
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="col-md-12 text-right">
+                            <a class="btn btn-raised legitRipple btn-primary execute-btn"
+                               th:if="${policyJob.status != 'EXECUTE'}"
+                               th:data-policyId="${policyJob.id}"> <i class="position-left icon-play3"></i> Execute</a>
+
+                            <a class="btn btn-raised legitRipple btn-warning stop-btn"
+                               th:if="${policyJob.status == 'EXECUTE'}"
+                               th:data-policyId="${policyJob.id}"> <i class="position-left icon-stop"></i> Stop</a>
+
+                            <a class="btn btn-raised legitRipple btn-success edit-btn"
+                               th:href="${'/policy-configuration/' + policyJob.id + '/edit'}"
+                               th:if="${policyJob.status == 'INIT'}"
+                               th:data-policyId="${policyJob.id}"> <i class="position-left icon-pencil5"></i> Edit</a>
+
+                            <a class="btn btn-raised legitRipple btn-danger delete-btn"
+                               th:if="${policyJob.status != 'EXECUTE'}"
+                               th:data-policyId="${policyJob.id}"> <i class="position-left icon-trash"></i> Delete</a>
+
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

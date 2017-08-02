@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div th:fragment="assign_tag_provisioning_dialog" id="assign-tag-provisioning" title="Assign tag" class="modal">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <form class="form-horizontal" action="#" method="POST" name="assignTagProvisioningForm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title text-uppercase">Assign tag</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label ng-show="isCreate" class="col-lg-3 control-label"> Select Tag:</label>
+                        <label ng-hide="isCreate" class="col-lg-3 control-label"> Tag Name:</label>
+                        <div class="col-lg-9">
+                    <span ng-show="isCreate">
+                        <select ng-model="tag.rootTagId" ng-change="selectTag(tag.rootTagId)" name="tagId" data-placeholder="Select a Tag..." class="select form-control">
+                            <option></option>
+                            <option ng-repeat="tagNoneAssign in listTagNoneAssign" value="{{tagNoneAssign.id}}">{{tagNoneAssign.name}}</option>
+                        </select>
+                    </span>
+                            <input ng-hide="isCreate" ng-model="tag.name" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label"> Type Tag:</label>
+                        <div class="col-lg-9">
+                            <span class="form-control">{{tag.type}}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">List Parameters:</label>
+                        <div class="col-lg-9">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Path</th>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Range value</th>
+                                        <th>Default value</th>
+                                        <th>Use Subscriber Data</th>
+                                        <th>Value</th>
+                                        <th>Config view <span class="text-danger">*</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="param in tag.parameters">
+                                        <td> {{tag.parentObject + param.path}}</td>
+                                        <td> {{param.shortName}}</td>
+                                        <td> {{param.dataType}}</td>
+                                        <td> {{param.rule}}</td>
+                                        <td> {{param.defaultValue}}</td>
+                                        <td><input type="checkbox" ng-model="param.useSubscriberData" ng-true-value="1" ng-false-value="0"> </td>
+                                        <td><input type="text" ng-model="param.value" class="form-control input-small"></td>
+                                        <td>
+                                            <select ng-model="param.inputType" ng-required="true" name="inputType_{{param.path}}" class="form-control" style=" width: 145px !important;">
+                                                <option value="">- Select input type -</option>
+                                                <option ng-repeat="inputType in listInputType" value="{{inputType}}"> {{inputType}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary legitRipple" ng-click="submit(tag)" ng-disabled="!assignTagProvisioningForm.$valid">Submit <i class="icon-arrow-right14 position-right"></i></button>
+                    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

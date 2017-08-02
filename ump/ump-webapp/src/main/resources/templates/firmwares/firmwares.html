@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UMP | Firmware</title>
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_all.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_childcounter.js"></script>
+
+    <!-- App js files -->
+    <!--<script type="text/javascript" src="/assets/js/core/app.js"></script>-->
+    <script type="text/javascript" src="/ump/firmware.js"></script>
+    <script type="text/javascript">
+        function check() {
+            return confirm($('#inputFileEdit').attr('message-data'));
+        }
+    </script>
+    <style>
+        .table-pointer tbody tr {
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+<body>
+<div class="page-container" layout:fragment="content">
+
+    <!--create firmware dialog-->
+    <div th:replace="firmwares/dialog/create_firmware_dialog::create_firmware_dialog"></div>
+    <!--/create firmware dialog -->
+
+    <!--create firmware tasks dialog-->
+    <div th:replace="firmwares/dialog/create_firmware_tasks_dialog::create-firmware-tasks-type-dialog"></div>
+    <!--/create firmware tasks dialog -->
+
+    <div class="page-content">
+
+        <!--Device type tree-->
+        <div th:replace="firmwares/fragments/firmware_tree::firmware_tree"></div>
+        <!--/Device type tree -->
+
+        <div class="content-wrapper">
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h4>
+                            <ul th:if="${!flagShowNoDeviceTypeVersion}"
+                                class="breadcrumb breadcrumb-caret position-right">
+                                <li><a th:href="@{/firmwares}"><i class="icon-arrow-left52 position-left"></i>FIRMWARES</a>
+                                </li>
+                                <li><a th:href="${'/firmwares/'+deviceTypeVersionFirst.id}"
+                                       th:text="${deviceTypeOfVersionFirst.manufacturer + ' - ' + deviceTypeOfVersionFirst.oui}">Manufacturer-OUI</a>
+                                </li>
+                                <li><a th:href="${'/firmwares/'+deviceTypeVersionFirst.id}"
+                                       th:text="${deviceTypeOfVersionFirst.name + ' - ' + deviceTypeOfVersionFirst.productClass}">Name-Product
+                                    Class</a></li>
+                                <li><a th:href="${'/firmwares/'+deviceTypeVersionFirst.id}"
+                                       th:text="${deviceTypeVersionFirst.firmwareVersion}">firmware</a></li>
+                            </ul>
+                        </h4>
+
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs">
+                            <li th:class="${isAssigningtab == true?'':'active'}"><a href="#overview-tab"
+                                                                                    data-toggle="tab"
+                                                                                    class="legitRipple"
+                                                                                    aria-expanded="true"
+                                                                                    th:text="#{firmwares.overview.tab}">Overview</a>
+                            </li>
+                            <li th:class="${isAssigningtab == true?'active':''}"><a href="#assigning-tab"
+                                                                                    data-toggle="tab"
+                                                                                    class="legitRipple"
+                                                                                    aria-expanded="false"
+                                                                                    th:text="#{firmwares.assigning.tab}">Assigning</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <!-- overview tab -->
+                            <div class="tab-pane" th:classappend="${isAssigningtab == true?'':'active'}"
+                                 id="overview-tab">
+                                <div class="alert alert-success no-border" th:if="${flagShowNoDeviceTypeVersion}">
+                                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span
+                                            class="sr-only">Close</span></button>
+                                    <span class="text-semibold" th:text="#{firmwares.showNoFirmware}"></span>
+                                </div>
+                                <div id="show-detail" th:if="${!flagShowNoDeviceTypeVersion}">
+                                    <div class="row">
+                                        <form class="form-horizontal" id="edit-firmware-form" action="#" method="POST"
+                                              th:action="@{/firmwares/update-version}"
+                                              enctype="multipart/form-data">
+                                            <input type="hidden" name="deviceTypeVersionId" value=""
+                                                   th:value="${deviceTypeVersionFirst.id}">
+                                            <input type="hidden" name="flagEnableSaveFile" value="0">
+                                            <div class="form-group col-md-12">
+                                                <label class="control-label col-md-3"> Manufacturer:</label>
+                                                <div class="col-md-9">
+                                                    <span id="manufacture" class="form-control"
+                                                          th:text="${deviceTypeOfVersionFirst.manufacturer}"
+                                                          name="manufacture"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label class="control-label col-md-3"> OUI</label>
+                                                <div class="col-md-9">
+                                                    <span id="oui" class="form-control"
+                                                          th:text="${deviceTypeOfVersionFirst.oui}" name="oui"></span>
+                                                    <input type="text" name="oui" th:value="${deviceTypeOfVersionFirst.oui}" style="display: none">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label class="control-label col-md-3"
+                                                       th:text="#{label.productClass}"></label>
+                                                <div class="col-md-9">
+                                                    <span id="productClass" class="form-control"
+                                                          th:text="${deviceTypeOfVersionFirst.productClass}"
+                                                          name="productClass"></span>
+                                                    <input type="text" name="productClass" th:value="${deviceTypeOfVersionFirst.productClass}" style="display: none">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label class="control-label col-md-3"
+                                                       th:text="#{firmwares.created}"></label>
+                                                <div class="col-md-9">
+                                                    <span id="create" class="form-control"
+                                                          th:text="${deviceTypeVersionFirst.convertCreatedMilliSecondToStringDate()}"
+                                                          name="create"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label class="control-label col-md-3"
+                                                       th:text="#{firmwares.lastUpdated}"></label>
+                                                <div class="col-md-9">
+                                                    <span id="update" class="form-control"
+                                                          th:text="${deviceTypeVersionFirst.convertCreatedMilliSecondToStringDate()}"
+                                                          name="update"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label class="control-label col-md-3"
+                                                       th:text="#{firmwares.version}"></label>
+                                                <div class="col-md-9">
+                                                    <input name="version" type="text" class="form-control"
+                                                           th:value="${deviceTypeVersionFirst.firmwareVersion}"
+                                                           required="required"
+                                                           notExisted="notExisted"
+                                                           th:check-api="${'/firmwares/existed?id='+deviceTypeVersionId+'&firmwareVersion='}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label class="control-label col-md-3"> File</label>
+                                                <div class="col-md-9">
+                                                    <input id="inputFileEdit" type="file" name="firmwareFile"
+                                                           class="file-styled"
+                                                           th:attr="message-data=#{firmware.title.re.upload.file}"
+                                                           onclick="return check()">
+                                                    <span id="fileNameOfFirstVersion"
+                                                          th:text="${deviceTypeVersionFirst.firmwareFileName}"></span>
+                                                </div>
+                                            </div>
+                                            <div class="text-right col-md-12">
+                                                <button type="submit" class="btn btn-primary legitRipple"
+                                                        th:text="#{label.saveButton}"><i
+                                                        class="icon-arrow-right14 position-right"></i></button>
+                                            </div>
+                                        </form>
+                                        <a href="#" id="confirm-delete-dialog-opener"
+                                           class="btn btn-warning text-center" type="button"
+                                           style="position: absolute;right: 100px; bottom: 20px;"
+                                           th:text="#{label.deleteButton}"></a>
+                                        <div id="confirm-delete-dialog" th:title="#{firmwares.confirmDelete}">
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <form action="#" class="form-horizontal"
+                                                          th:action="@{/firmwares/delete-version}" method="POST"
+                                                          enctype="multipart/form-data"
+                                                          style="display: inline-block">
+                                                        <input type="hidden" name="deviceTypeVersionId" value=""
+                                                               th:value="${deviceTypeVersionFirst.id}">
+                                                        <button type="submit" class="btn btn-warning"
+                                                                th:text="#{label.deleteButton}"></button>
+                                                    </form>
+                                                    <button id="confirm-delete-dialog-close"
+                                                            class="btn btn-primary"
+                                                            th:text="#{label.cancelButton}"></button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /overview tab -->
+
+                            <!-- assigning tab-->
+
+                            <div class="tab-pane" th:classappend="${isAssigningtab == true?'active':''}"
+                                 id="assigning-tab">
+
+                                <div class="alert alert-success no-border" th:if="${flagShowNoDeviceTypeVersion}">
+                                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span
+                                            class="sr-only">Close</span></button>
+                                    <span class="text-semibold" th:text="#{firmwares.showNoFirmware}"></span>
+                                </div>
+
+                                <span th:text="#{firmware.task}"
+                                      th:if="${!flagShowNoDeviceTypeVersion}">Firmware Task</span>
+                                <i id="create-firmware-tasks-type-dialog-opener" class="icon-plus3"
+                                   th:if="${!flagShowNoDeviceTypeVersion}"
+                                   style="padding-left:5px"></i>
+
+                                <br/> <br/>
+                                <table id="DataTables_Table_0"
+                                       class=" table datatable-sorting dataTable no-footer table-striped table-hover"
+                                       cellspacing="0"
+                                       width="100%"
+                                       th:if="${firmwareTasks!= null && firmwareTasks.size() >0} and ${!flagShowNoDeviceTypeVersion}">
+                                    <thead>
+                                    <tr>
+                                        <th rowspan="1" tabindex="0"
+                                            colspan="1" aria-controls="DataTables_Table_0" th:text="#{group.tree.text}">
+                                            Group Tree
+                                        </th>
+
+                                        <th rowspan="1" tabindex="0"
+                                            colspan="1" aria-controls="DataTables_Table_0" th:text="#{firmware.type}">
+                                            Type
+                                        </th>
+
+                                        <th rowspan="1" tabindex="0"
+                                            colspan="1" aria-controls="DataTables_Table_0">
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="firmwareTask:${firmwareTasks}" role="row"
+                                        style="cursor: pointer;">
+                                        <td th:text="${firmwareTask.groupName}" class="cannotChange"></td>
+                                        <td th:text="${firmwareTask.type == 0? 'Now' : 'New Contact'}"
+                                            class="cannotChange"></td>
+                                        <td>
+                                            <a href="#" class="confirm-delete-task-dialog-opener"
+                                               th:firmwareTaskId="${firmwareTask.id}" th:text="#{label.deleteButton}">Delete</a>
+                                            <input type="hidden" class="firmwareTaskId" value="${firmwareTask.id}">
+
+
+                                            <a href="#" class="edit-task-dialog-opener"
+                                               th:firmwareTaskId="${firmwareTask.id}"
+                                               th:groupId="${firmwareTask.groupId}"
+                                               th:type="${firmwareTask.type}"
+                                               th:text="#{label.editButton}"
+                                            >Edit</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <div id="confirm-delete-task-dialog" title="Are you sure to delete task?">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <form action="#" class="form-horizontal"
+                                                  th:action="@{/firmwares/delete-task}" method="POST"
+                                                  enctype="multipart/form-data"
+                                                  style="display: inline-block">
+                                                <input type="hidden" name="firmwareTaskId" value="">
+                                                <button type="submit" class="btn btn-warning"
+                                                        th:text="#{label.deleteButton}">Delete
+                                                </button>
+                                            </form>
+                                            <button id="confirm-delete-task-dialog-close"
+                                                    class="btn btn-primary" th:text="#{label.cancelButton}">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /assigning tab -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

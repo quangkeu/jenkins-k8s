@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/extras/animate.min.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/validation/validate.min.js"></script>
+    <!-- App js files -->
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="/ump/diagnostic.js"></script>
+
+</head>
+<body>
+<div th:fragment="diagnostics_tab" id="diagnostics_tab" >
+
+    <div id="alerts_diagnostic">
+        <div class="alert alert-success no-border" hidden="true" id="_diagnosticAlertSuccess">
+            <button type="button" class="close"><span>×</span><span class="sr-only">Close</span></button>
+            <span class="text-semibold"></span>
+        </div>
+        <div class="alert alert-danger no-border" hidden="true" id="_diagnosticAlertDanger">
+            <button type="button" class="close"><span>×</span><span class="sr-only">Close</span></button>
+            <span class="text-semibold"></span>
+        </div>
+        <div class="alert alert-primary no-border" hidden="true" id="_diagnosticAlertPrimary">
+            <button type="button" class="close"><span>×</span><span class="sr-only">Close</span></button>
+            <span class="text-semibold"></span>
+        </div>
+    </div>
+
+    <div class="datatable-scroll">
+
+        <form id="_diagnosticForm">
+            <table id="_tableDiagnostic" class="table table-borderless"
+                   width="100%">
+                <thead>
+                </thead>
+                <tbody>
+                <tr role="row" width="30%">
+                    <td><b>Select diagnostic test</b></td>
+                    <td width="30%">
+                        <select class="selectboxit selectbox selectboxit-enabled selectboxit-btn"
+                                name="_diagnosticTypeTest">
+                            <option selected="selected">Ping Test</option>
+                            <option>Tracert Test</option>
+                        </select>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr role="row">
+                    <td width="30%"><b>Host</b></td>
+                    <td width="30%"><input type="text" value="" class="form-control" name="_diagnosticHost" title="input your host"/></td>
+                    <td></td>
+                </tr>
+                <tr role="row">
+                    <td width="30%"><b>Interface</b></td>
+                    <td width="30%">
+                        <select class="selectboxit selectbox selectboxit-enabled selectboxit-btn"
+                                name="_diagnosticInterface">
+                            <option selected="selected">Any Avaiable</option>
+                            <option th:if="${listInterface != null}" th:each="tmp : ${listInterface}"
+                                    th:text="${tmp}"></option>
+                        </select>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr role="row">
+                    <td width="30%"><b>Data block size in byte</b></td>
+                    <td width="30%"><input type="text" value="" class="form-control" name="_diagnosticBlockSize" title="input your blockSize"/></td>
+                    <td></td>
+                </tr>
+                <tr role="row">
+                    <td width="30%"><b>Time out in milliseconds</b></td>
+                    <td width="30%"><input type="text" value="" class="form-control" name="_diagnosticTimeOut" title="input your timeout"/></td>
+                    <td></td>
+                </tr>
+                <tr role="row">
+                    <td width="30%"><b>Number of Repetitions</b></td>
+                    <td width="30%"><input type="text" value="" class="form-control"
+                                           name="_diagnosticNumberOfRepetitions" title="input your number of repetitions"/></td>
+                    <td></td>
+                </tr>
+                <tr role="row">
+                    <td width="30%">
+                        <button type="submit" id="btnStartTest" class="btn btn-sm btn-primary"
+                        >Contact device and start test
+                        </button>
+                    </td>
+                    <td width="30%"></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+
+    </div>
+    <div class="datatable-scroll">
+        <table id="_tableDiagnosticResult" class="table table-borderless"
+               width="100%">
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody th:if="${diagnostic.parameters}">
+            <tr th:each="key : ${diagnostic.parameters.keySet()}">
+                <td th:text="${key}"></td>
+                <td th:text="${diagnostic.parameters.get(key)}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:text="${deviceId}"  hidden="true" id="deviceId"/>
+    </div>
+
+</div>
+</body>
+</html>

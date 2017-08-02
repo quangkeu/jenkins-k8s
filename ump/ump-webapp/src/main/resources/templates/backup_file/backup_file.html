@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>UMP | File Management</title>
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_all.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_childcounter.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/notifications/pnotify.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pagination/bs_pagination.min.js"></script>
+    <script type="text/javascript" src="/assets/js/file/bootstrap-filestyle.min.js"></script>
+
+    <!-- App js files -->
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="/ump/backup_file.js"></script>
+
+    <style>
+        .lb-md {
+          font-size: 16px;
+          margin-top : 5px;
+        }
+        .glyphicon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .red {
+            color: red;
+        }
+    .ui-dialog .ui-dialog-title{
+         white-space: normal;
+         word-wrap: break-word;
+    }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content" style="margin-top: 0px !important;">
+
+    <div class="page-content">
+
+        <div id="alerts">
+            <div class="alert alert-danger no-border" hidden="true" id="alert_danger">
+                <a href="#" class="close" data-dismiss="alert"><span>×</span></a>
+                <span class="text-bold" ></span>
+            </div>
+        </div>
+
+        <div class="panel panel-flat panel-body">
+
+            <div class="alert alert-success no-border" th:if="${paginator.totalPages == 0}">
+                <a href="#" class="close"><span>×</span></a>
+                <span class="text-bold" >No data result.</span>
+            </div>
+
+            <div th:if="${paginator.totalPages > 0}">
+                <div class="row">
+                    <div class="datatable-scroll">
+                        <table id="dt_BackupFile"
+                               class=" table datatable-sorting dataTable no-footer table-striped table-hover"
+                               cellspacing="0"
+                               width="100%">
+                            <thead>
+                            <tr>
+                                <th tabindex="0"
+                                    aria-controls="dt_Device" rowspan="1" colspan="1">
+                                    <span id="_manufacturer">Manufacturer</span>
+                                </th>
+                                <th tabindex=""
+                                    aria-controls="dt_Device" rowspan="1" colspan="1">
+                                    <span id="InternetGatewayDevice.DeviceInfo.ModelName">Model Name</span>
+                                </th>
+                                <th tabindex="0"
+                                    aria-controls="dt_Device" rowspan="1" colspan="1">
+                                    <span id="_fileType">File Type</span>
+                                </th>
+                                <th tabindex="0"
+                                    aria-controls="dt_Device" rowspan="1" colspan="1">
+                                    <span id="fileName">File Name</span>
+                                </th>
+                                <th tabindex="0"
+                                    aria-controls="dt_Device" rowspan="1" colspan="1">
+                                    <span id="_version">Version</span>
+                                </th>
+                                <th tabindex="0"
+                                    aria-controls="dt_Device" rowspan="1" colspan="1">
+                                    <span id="_registered">Created</span>
+                                </th>
+                                <th tabindex="0"
+                                    aria-controls="dt_Device" rowspan="1" colspan="1"
+                                    name="sortColumn">
+                                    <span id="_fileSize">File Size (MB)</span>
+                                </th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="fileManagement:${paginator.fileManagements}" role="row" style="cursor: pointer;">
+                                </td>
+                                <td th:each="key : ${paginator.indexParams.keySet()}" th:if="${key != '_id'}"
+                                    th:text="${fileManagement.parameters.get(key)}" name="cannotChange"></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-6 pull-left">
+                    <span id="data-backup-paginator"
+                          th:attrappend="data-number=${paginator.number},
+                                             data-totalPages=${paginator.totalPages},
+                                             data-lastPage=${paginator.lastPage}" style="display: none"></span>
+                        <ul class="pagination-flat pagination-sm twbs-prev-next"></ul>
+                        <div style="position: relative; top: -11px; display: inline-block">
+                            <input type="number" min="1" th:max="${paginator.lastPage}" placeholder="Page..."
+                                   class="form-control go-page-input" style="display: inline-block; width: 50px">
+                            <button class="btn btn-default go-page-btn">Go</button>
+                            <select class="form-control limit-page-input" style="display: inline-block; width: 50px">
+                                <option value="20" th:selected="${itemPerPage} == '20'">20</option>
+                                <option value="30" th:selected="${itemPerPage} == '30'">30</option>
+                                <option value="50" th:selected="${itemPerPage} == '50'">50</option>
+                            </select>
+                            <span>items/page</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

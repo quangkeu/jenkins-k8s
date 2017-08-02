@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="subscriber_tree" class="sidebar sidebar-main sidebar-default">
+    <div class="device-type-sidebar">
+        <div class="sidebar-category sidebar-category-visible">
+            <div class="category-content">
+
+                <div>
+                    <h5 class="text-uppercase" style="display: inline-block"> <span th:text="#{subscriber.title.subscriber}"></span></h5>
+
+                    <div class="btn-group pull-right" style="position: relative; top: 13px;">
+                        <i id="form-create-subscriber-template-opener" class="icon-plus3 position-right dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="cursor: pointer"></i>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-subscriber-tree">
+                            <li title="Create a new subscriber"><a href="javascript:void(0);" id="create-subscriber-dialog-opener"><i class="icon-plus3"></i> Create subscriber</a></li>
+                            <li title="Import multi subscribers"><a href="javascript:void(0);" id="import-subscribers-dialog-opener"><i class="icon-import"></i> Import subscribers</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <br>
+
+                <div class="has-feedback has-feedback-left">
+                    <input type="text" class="form-control input-xs" id="input-search-subscriber" placeholder="Write something...">
+                    <div class="form-control-feedback" style="cursor: pointer !important;">
+                        <i class="icon-search4 text-muted text-size-base"></i>
+                    </div>
+                </div>
+                <br>
+
+                <div th:if="${noSubscriber}">
+                    <div th:replace="fragments/alert/no_data_result::no_data_result"></div>
+                </div>
+
+                <div th:if="!${noSubscriber}" id="subscriber-tree">
+                    <div class="subscriber-tree">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

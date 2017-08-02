@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>UMP - Logging User</title>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.date.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pagination/bs_pagination.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/inputmask/jquery.inputmask.bundle.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/notifications/pnotify.min.js"></script>
+    <script type="text/javascript" src="/ump/logging.js"></script>
+    <script type="text/javascript" src="/ump/logging_user.js"></script>
+
+</head>
+<body>
+<div class="page-container" layout:fragment="content">
+    <div class="page-content">
+        <div class="content-wrapper">
+
+            <!--Filter-->
+            <div class="panel panel-flat">
+                <div class="panel-body">
+                    <form class="form-horizontal formFilterLogging" method="get" novalidate="novalidate">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label text-right"> Start Time:</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control fromDate" name="fromDate" th:value="${request.get('fromDate')}"/>
+                                            <span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label text-right"> End Time:</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control toDate" name="toDate" th:value="${request.get('toDate')}"/>
+                                            <span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label text-right"> Log Type:</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control logType" name="logType">
+                                            <option th:selected="${request.get('logType') == 'userLog' ? true : false}" value="userLog"> User Log</option>
+                                            <option th:selected="${request.get('logType') == 'deviceLog' ? true : false}" value="deviceLog"> Device Log</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label text-right"> Actor:</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="actor" th:value="${request.get('actor')}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label text-right"> Name:</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="name" th:value="${request.get('name')}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group text-right">
+                                    <button type="submit" class="btn btn-primary"><i class="icon-search4 position-left"></i> SEARCH</button>
+                                    <a class="btn btn-warning btnDelete"><i class="icon-trash position-left"></i> DELETE ALL</a>
+                                    <a class="btn btn-default btnSetting"><i class="icon-cog position-left"></i> SETTING</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--// Filter-->
+
+            <!--Content-->
+            <div class="panel panel-flat">
+
+                <!--No data-->
+                <div th:if="${loggingUserPaginator.numberOfElements == 0}" class="panel-body">
+                    <div th:replace="fragments/alert/no_data_result::no_data_result"></div>
+                </div>
+                <!--// No data-->
+
+                <!--Main content-->
+                <div th:if="${loggingUserPaginator.numberOfElements > 0}" class="table-responsive">
+                    <table class="table table-hover tableLoggingUser">
+                        <thead>
+                        <tr>
+                            <th> NAME</th>
+                            <th> TIME</th>
+                            <th> ACTOR</th>
+                            <th> AFFECTED</th>
+                            <th width="10px"> EXPORT</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <!--// List sessions-->
+                            <div th:each="loggingUserItem: ${loggingUserPaginator.content}">
+                                <tr th:data-session="${loggingUserItem.session}" class="rowSession" style="cursor: pointer">
+                                    <td> <i class="icon-menu7 position-left"></i> <span th:text="${loggingUserItem.session}"></span></td>
+                                    <td th:text="${#dates.format(loggingUserItem.created, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                    <td th:text="${loggingUserItem.username}"></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <!--// List actions-->
+                                <div th:each="loggingActionKey: ${loggingUserItem.actions.keySet()}">
+                                    <tr th:data-session="${loggingUserItem.session}" th:data-keyAction="${loggingActionKey}" class="rowAction" style="display: none; cursor: pointer">
+                                        <td style="padding-left: 40px"> <i class="icon-circle-small position-left"></i>
+                                        <span th:text="${loggingUserItem.actions.get(loggingActionKey).action}"></span> </td>
+                                        <td th:text="${loggingUserItem.actions.get(loggingActionKey).time}"></td>
+                                        <td th:text="${loggingUserItem.username}"></td>
+                                        <td th:text="${loggingUserItem.actions.get(loggingActionKey).affected}"></td>
+                                        <td></td>
+                                    </tr>
+
+                                    <!--// List logging devices-->
+                                    <div th:each="loggingDeviceItem: ${loggingUserItem.actions.get(loggingActionKey).loggingDevices}">
+                                        <tr th:data-session="${loggingUserItem.session}"
+                                            th:data-keyAction="${loggingActionKey}"
+                                            th:data-keyLoggingDevice="${loggingDeviceItem.session}"
+                                            class="rowLoggingDevice" style="display: none; cursor: pointer">
+                                            <td style="padding-left: 80px"> <i class="icon-circle-small position-left"></i>
+                                                <span th:text="${loggingDeviceItem.session}"></span> </td>
+                                            <td th:text="${loggingDeviceItem.time}"></td>
+                                            <td th:text="${loggingDeviceItem.deviceId}"></td>
+                                            <td>ACS</td>
+                                            <td class="unbindClick" style="cursor: default" align="right"> <a class="text-default exportSession" title="Export XML"> <i class="icon-download4"></i></a></td>
+                                        </tr>
+
+                                        <!--// List cwmps-->
+                                        <div th:each="cwmpKey: ${loggingDeviceItem.cwmps.keySet()}">
+                                            <tr th:data-session="${loggingUserItem.session}"
+                                                th:data-keyAction="${loggingActionKey}"
+                                                th:data-keyLoggingDevice="${loggingDeviceItem.session}"
+                                                class="rowCwmp" style="display: none; cursor: pointer">
+                                                <td style="padding-left: 120px"> <i class="icon-circle-small position-left"></i>
+                                                    <span th:text="${loggingDeviceItem.cwmps.get(cwmpKey).cwmp}"></span> </td>
+                                                <td th:text="${loggingDeviceItem.cwmps.get(cwmpKey).time}"></td>
+                                                <td th:text="${loggingDeviceItem.cwmps.get(cwmpKey).actor}"></td>
+                                                <td th:text="${loggingDeviceItem.cwmps.get(cwmpKey).affected}"></td>
+                                                <td class="cwmpMessage"  style="display: none"> <pre th:text="${loggingDeviceItem.cwmps.get(cwmpKey).message}"></pre></td>
+                                                <td></td>
+                                            </tr>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </tbody>
+                    </table>
+                </div>
+                <!--// Main content-->
+
+                <!--Paging-->
+                <hr>
+                <div class="col-md-12">
+                    <span th:data-number="${request.get('page')}" th:data-totalPages="${loggingUserPaginator.totalPages}" class="dataPagination" style="display: none"></span>
+                    <ul class="pagination-flat pagination-sm listPage"></ul>
+                    <div style="position: relative; top: -11px; display: inline-block">
+                        <input type="number" placeholder="Page..." class="form-control inputGoPage"  style="display: inline-block; width: 50px">
+                        <button class="btn btn-default goPageBtn">Go</button>
+                        <select class="form-control inputLimitPage" style="display: inline-block; width: 50px">
+                            <option th:if="${request.get('limit') != null && request.get('limit') != '20' && request.get('limit') != '30' && request.get('limit') != '50'}"
+                                    th:text="${request.get('limit')}"
+                                    th:value="${request.get('limit')}"></option>
+                            <option value="20" th:selected="${request.get('limit') == '20' ? true : false}">20</option>
+                            <option value="30" th:selected="${request.get('limit') == '30' ? true : false}">30</option>
+                            <option value="50" th:selected="${request.get('limit') == '50' ? true : false}">50</option>
+                        </select>
+                        <span>items/page</span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <!--//Paging-->
+            </div>
+
+            <!--// Content-->
+
+            <!--modal-->
+            <div th:replace="logging/modal/logging_device_setting_modal::loggingDeviceSettingModal"></div>
+            <div th:replace="logging/modal/logging_device_cwmp_modal::loggingDeviceCwmpModal"></div>
+            <!-- /modal-->
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> </head>
+<body>
+<div th:fragment="loggingDeviceCwmpModal" class="modal modalLoggingDeviceCwmp">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">CWMP DETAIL</h4>
+            </div>
+
+            <div class="modal-body">
+                <p class="currentCwmpMessage"></p>
+            </div>
+
+            <div class="modal-footer text-right">
+                <a class="btn btn-default" th:text="#{button.cancel}" data-dismiss="modal">CLOSE</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

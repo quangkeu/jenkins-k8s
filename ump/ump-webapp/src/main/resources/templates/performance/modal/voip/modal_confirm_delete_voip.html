@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div th:fragment="modal_confirm_delete_voip">
+    <div class="modal" id="modal_confirm_delete_voip">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="container"></div>
+                <div class="modal-body">
+                    <h4 class="modal-title">Do you want to delete data ?</h4>
+                    <input id="dataDeleteVoip" type="hidden">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="confirm_delete_yes_voip">Yes</button>
+                    <a href="#" data-dismiss="modal" class="btn btn-default">No</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

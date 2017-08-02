@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Device Diagnostics</title>
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/uniform.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_all.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_childcounter.js"></script>
+
+    <script type="text/javascript" src="/assets/js/plugins/tables/datatables/datatables.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/tables/datatables/extensions/select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <!-- /theme JS files -->
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/switchery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/switch.min.js"></script>
+    <!-- App js files -->
+    <script type="text/javascript" src="/ump/device_diagnostic.js"></script>
+</head>
+<body>
+
+
+
+<div class="page-container" layout:fragment="content">
+
+    <div class="sidebar sidebar-main sidebar-default">
+        <h4><i class="position-left"></i>
+            <span class="text-semibold" th:text="#{device.list}"></span>
+        </h4>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href="/"><span th:text="#{device.listTitle}"></span></a></li>
+            <li><a th:href="@{'/devices/device_info/'} + ${deviceID}"><span th:text="#{device.deviceInfo}"></span></a></li>
+            <li><a th:href="@{'/devices/device_settings/'} + ${deviceID}"><span th:text="#{device.deviceSettings}"></span></a></li>
+            <li><a th:href="@{'/devices/device_advanced_view/'} + ${deviceID}"><span th:text="#{device.deviceAdvancedView}"></span></a></li>
+            <li><a th:href="@{'/devices/device_customRPC/'} + ${deviceID}"><span th:text="#{device.deviceCustomRPC}"></span></a></li>
+            <li><a th:href="@{'/devices/device_file_download/'} + ${deviceID}"><span th:text="#{device.deviceFileDownload}"></span></a></li>
+            <li><a th:href="@{'/devices/device_file_upload/'} + ${deviceID}"><span th:text="#{device.deviceFileUpload}"></span></a></li>
+            <li class="active"><a th:href="@{'/devices/device_diagnostics/'} + ${deviceID}"><span th:text="#{device.deviceDiagnostics}"></span></a></li>
+            <li><a th:href="@{'/devices/device_activity/'} + ${deviceID}"><span th:text="#{device.deviceLogs}"></span></a></li>
+        </ul>
+
+    </div>
+
+    <div class="panel">
+        <!-- alert -->
+        <div class="sidebar-category sidebar-category-visible" style="background-color: white;">
+            <div class="groupTree-content">
+                <h5 class="text-uppercase">
+                    <button id="back-diagnostics" class="btn btn-sm btn-primary" th:data-href="@{'/devices/device_diagnostics/' + ${deviceID}}">BACK</button>
+                    <span style="padding-left: 330px;">DIAGNOSTICS RESULTS</span>
+                    <button id="confirm-remove-diagnostics" th:data-href="@{'/devices/device_diagnostics/remove/' + ${deviceID} + '/' + ${id}}"  class="btn btn-sm btn-primary col-md-offset-4 text-right">Delete</button>
+                </h5>
+                <hr>
+            </div>
+
+        </div>
+        <div class="row group-tree-body">
+
+            <div class="form-group" th:each="parameter : ${parameters}">
+                <label class="control-label col-sm-3"  th:text="${parameter.shortName}"><span class="text-danger"></span></label>
+                <div class="col-sm-9" style="" th:if="${parameter.shortName!='DiagnosticsState'}">
+                    <label th:text="${requestParams.get(parameter.path)}" class="form-control" />
+                </div>
+                <div class="col-sm-9" style="" th:if="${parameter.shortName=='DiagnosticsState'}">
+                    <label id='DiagnosticsState' th:text="${requestParams.get(parameter.path)}" class="form-control"/>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

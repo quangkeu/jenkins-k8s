@@ -6457,6 +6457,9 @@ h6.panel-title,
 .icons-list a[data-action="modal"]:after {
   content: '\e9eb';
 }
+.icons-list a[data-action="none"]:after {
+  content: '\e9fb';
+}
 .panel-footer {
   position: relative;
   padding-left: 0;

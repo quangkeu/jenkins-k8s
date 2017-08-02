@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>UMP | Alarm</title>
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_all.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_childcounter.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/notifications/pnotify.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pagination/bs_pagination.min.js"></script>
+    <script src="/assets/js/plugins/ui/moment/moment.min.js"></script>
+    <script src="/assets/js/plugins/ui/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/charts/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="/assets/js/charts/highcharts/exporting.js"></script>
+    <!-- App js files -->
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="/ump/device_type.js"></script>
+    <script type="text/javascript" src="/ump/alarm_graph.js"></script>
+    <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker({
+                 format: 'YYYY-MM-DD'
+           });
+                $('#datetimepicker2').datetimepicker({
+                 format: 'YYYY-MM-DD'
+           });
+            });
+    </script>
+    <style>
+        .nice {
+            margin-bottom: 20px;
+        }
+
+        .red {
+            color: red;
+        }
+
+        .margin-label {
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body ng-controller="AlarmGraphController">
+<div class="page-container" layout:fragment="content">
+    <div class="row" style="margin-bottom: 10px;">
+        <a class="btn btn-primary" href="/alarm" th:text="#{alarm.dashboard}"></a>
+        <a class="btn btn-primary" style="margin-left: 10px;" href="/alarm-setting" th:text="#{alarm.setting}"></a>
+
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="sidebar sidebar-main sidebar-default">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="/alarm"><span th:text="#{alarms.list}"></span></a></li>
+                    <li class="active"><a href="/alarm-graph"><span th:text="#{alarms.graph}"></span></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10">
+
+        <div class="panel panel-flat panel-body">
+            <div class="row">
+                <input type="hidden" id="data-severity-alarm" th:value="${dataSeverityAlarm}">
+                <input type="hidden" id="data-number-of-alarm-type" th:value="${dataNumberOfAlarmType}">
+                <div class="form-group col-md-5">
+                    <label class="col-sm-3 control-label margin-label">Group Filter</label>
+                    <div class="col-sm-9">
+                        <select class="select2 form-control"
+                                name="alarm-name-search" id="group-filter-search"
+                                th:data-placeholder="#{select.search.placeholder}">
+                            <option value=""></option>
+                            <option th:each="subTem:${groupFilterList}"
+                                    th:value="${subTem.name}"
+                                    th:selected="${ subTem.name==groupFilterSearch }"
+                                    th:text="${subTem.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="col-sm-5 control-label margin-label" id="raised-time-from">Raised time from</label>
+                    <div class='input-group col-sm-7 date' id='datetimepicker1'>
+                        <input id="start-time" type='text' class="form-control" th:value="${startTimeSearch}"/>
+                        <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="col-sm-5 control-label margin-label" id="raised-time-to">to</label>
+                    <div class='input-group col-sm-7 date' id='datetimepicker2'>
+                        <input id="end-time" type='text' class="form-control" th:value="${endTimeSearch}"/>
+                        <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <button id="search-by-time" class="btn btn-sm btn-primary text-right" style="float: right;">View Graph
+                </button>
+            </div>
+
+        </div>
+
+        <div class="panel panel-flat panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="severity-alarm-chart"
+                         style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                </div>
+                <div class="col-md-6">
+                    <div id="container"
+                         style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

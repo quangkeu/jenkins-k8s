@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div th:fragment="modal_chart_ram_cpu">
+    <div class="modal fade rotate" id="modal_chart_ram_cpu" style="overflow: scroll;">
+        <div class="modal-dialog" style="width: 50%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Traffic Statistics Report</h4>
+
+                </div>
+                <div class="container"></div>
+                <div class="modal-body">
+                    <div id="byte_recv_ram_cpu" style="height: 350px;"></div>
+                    <div class="table-responsive" id="div_ram_cpu_chart" style="height: 350px;">
+                        <table class="table">
+                            <thead id="div_ram_cpu_chart_thead"></thead>
+                            <tbody id="div_ram_cpu_chart_tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

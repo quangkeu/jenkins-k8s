@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div th:fragment="add_data_template" class="modal" id="add-data-template-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" action="" id="add-data-template-form" method="POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title text-uppercase" th:text="#{subscriber.title.createNewTemplate}">Modal title</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Template Name <span class="text-danger">*</span> </label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="name" id="template-name" placeholder="Write a name..."
+                                   maxlength="20" required="required" notExisted="notExisted"
+                                   th:check-api="${'/subscriber/data-template/0/existed?name='}">
+                            <span class="error-special-character text-danger">Name has special character.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Parameter Name <span class="text-danger">*</span> </label>
+                        <div class="col-md-9">
+                            <div class="row" style="padding-bottom: 10px">
+                                <div class="col-md-10"><input type="text" class="form-control" id="add-data-template-parameter-name-input" name="name" placeholder="Write a name..." unique="unique" maxlength="20" autocomplete="off"> </div>
+                                <div class="col-md-2"><a class="btn btn-icon btn-primary btn-rounded legitRipple" id="add-data-template-parameter-name-btn"> <i class="icon-plus3"></i></a> </div>
+                            </div>
+                            <div id="add-data-template-list-parameter"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-primary" id="add-dat-template-btn-save" th:text="#{button.save}">Save <i class="icon-arrow-right14 position-right"></i></a>
+                    <a class="btn btn-default" th:text="#{button.cancel}" data-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

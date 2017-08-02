@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>UMP | File Management</title>
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_all.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_childcounter.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/notifications/pnotify.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pagination/bs_pagination.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/email/summernote.js"></script>
+    <script type="text/javascript" src="/assets/js/email/summernote.min.js"></script>
+    <link href="/assets/js/email/summernote.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/ump/email.js"></script>
+    <!-- App js files -->
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="/ump/common.js"></script>
+
+    <style>
+        .margin-label {
+            margin-top: 10px;
+        }
+        input[type=text]{
+          border-radius:10px;
+        }        .red {
+            color: red;
+        }
+        .right_btn {
+            margin-left: 10px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote({
+              height: 100,                 // set editor height
+              minHeight: null,             // set minimum height of editor
+              maxHeight: null,             // set maximum height of editor
+              focus: true                  // set focus to editable area after initializing summernote
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+<div layout:fragment="content" style="margin-top: 0px !important;">
+    <div id="confirm-delete-file-dialog" style="display:none;" title="Do you want to delete ? ">
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary"
+                    id="confirm-delete-file-yes-dialog">Yes
+            </button>
+            <button id="confirm-delete-file-no-dialog"
+                    class="btn btn-warning">No
+            </button>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <div class="form-group">
+            <input type="hidden" name="limit" th:value="${itemPerPage}">
+        </div>
+        <div id="confirm-delete-dialog" style="display:none;">
+            <div class="text-center">
+                <button class="btn btn-primary text-center" role="button" id="confirm-delete-now-dialog">
+                    Delete
+                </button>
+                <button id="confirm-delete-dialog-close" class="btn btn-warning text-center">Cancel</button>
+            </div>
+        </div>
+        <div id="alerts">
+            <div class="alert alert-danger no-border" hidden="true" id="alert_danger">
+                <a href="#" class="close" data-dismiss="alert"><span>×</span></a>
+                <span class="text-bold" ></span>
+            </div>
+        </div>
+        <div class="panel panel-flat panel-body">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label class="col-sm-4 control-label margin-label">ID</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="id-email" type="text">
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="col-sm-4 control-label margin-label">Description</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="description-email" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div id="summernote"></div>
+            <div class="row">
+                <a class="btn btn-danger right_btn center-block right_btn"  style="float: right;" data-dismiss="modal" id="delete-multi-email">Delete</a>
+                <a style="float: right;" class="btn btn-primary right_btn" id="add-new-email">Save</a>
+                <a style="float: right;" class="btn btn-primary right_btn" id="update-email">Update</a>
+
+                <!--<button id="delete-multi-email" class="btn btn-sm btn-danger text-right right_btn" style="float: right;">Delete-->
+                <!--</button>-->
+                <!--<button id="update-email" class="btn btn-sm btn-primary text-right right_btn" style="float: right;">Update-->
+                <!--</button>-->
+                <!--<button id="add-new-email" class="btn btn-sm btn-primary text-right right_btn" style="float: right;">Add-->
+                <!--</button>-->
+
+            </div>
+        </div>
+
+        <div class="panel panel-flat panel-body">
+
+            <div class="alert alert-success no-border" th:if="${paginator.totalPages == 0}">
+                <a href="#" class="close"><span>×</span></a>
+                <span class="text-bold" >No data result.</span>
+            </div>
+
+            <div th:if="${paginator.totalPages > 0}">
+                <div class="row">
+                    <div class="datatable-scroll">
+                        <table id="dt_email"
+                               class=" table datatable-sorting dataTable no-footer table-striped table-hover"
+                               cellspacing="0"
+                               width="100%">
+                            <thead>
+                            <tr>
+
+                                <th rowspan="1" tabindex="0"
+                                    colspan="1" aria-controls="dt_email">
+                                    <center>
+                                        <input type="checkbox" id="checkAll" name="checkAll"/>
+                                    </center>
+                                </th>
+                                <th tabindex="0"
+                                    aria-controls="dt_Device" rowspan="1" colspan="1">
+                                    <span id="id">Id</span>
+                                </th>
+
+                                <th tabindex="0"
+                                    aria-controls="dt_Device" rowspan="1" colspan="1">
+                                    <span id="value">Value</span>
+                                </th>
+                                <th tabindex=""
+                                    aria-controls="dt_Device" rowspan="1" colspan="1">
+                                    <span id="description">Description</span>
+                                </th>
+                                <th align="center" width="36px">Action</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="email:${paginator.emailList}" role="row" style="cursor: pointer;">
+                                <td>
+                                    <center><input type="checkbox" class="myCheckBox"
+                                                   th:id="${email.id}"/></center>
+                                </td>
+
+                                <td th:text="${email.id}" name="cannotChange"></td>
+                                <td th:text="${email.value}" name="cannotChange"></td>
+                                <td th:text="${email.description}" name="cannotChange"></td>
+                                <td align="center">
+                                    <ul class="icons-list">
+                                        <li><a href="javascript:void(0)" class="email-edit-opener"
+                                               th:attr="data-id=${email.id},data-value=${email.value}
+                                                            ,data-description=${email.description}">
+                                            <i class="glyphicon glyphicon-pencil"></i>
+                                        </a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div>
+                            <span id="data-email-paginator"
+                                  th:attrappend="data-number=${paginator.number},
+                                             data-totalPages=${paginator.totalPages},
+                                             data-lastPage=${paginator.lastPage}" style="display: none"></span>
+                        <ul class="pagination-flat pagination-sm twbs-prev-next"></ul>
+                        <div style="position: relative; top: -11px; display: inline-block">
+                            <input type="number" min="1" th:max="${paginator.lastPage}" placeholder="Page..."
+                                   class="form-control go-page-input" style="display: inline-block; width: 50px">
+                            <button class="btn btn-default go-page-btn">Go</button>
+                            <select class="form-control limit-page-input"
+                                    style="display: inline-block; width: 50px">
+                                <option value="20" th:selected="${itemPerPage} == '20'">20</option>
+                                <option value="30" th:selected="${itemPerPage} == '30'">30</option>
+                                <option value="50" th:selected="${itemPerPage} == '50'">50</option>
+                            </select>
+                            <span>items/page</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div th:fragment="modal_voip_detail">
+    <div class="modal fade" id="modal_voip_detail">
+        <div class="modal-dialog" style="width: 90%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Voip Service Statistic List</h4>
+                </div>
+                <div class="container"></div>
+                <div class="modal-body">
+                    <input id="performanceSettingVoip" type="hidden">
+                    <div class="row">
+                        <div class="alert alert-success no-border" id="alert_success_voip" hidden="true">
+                            <a href="#" class="close"><span>×</span></a>
+                            <span class="text-bold" >No data result.</span>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="table-responsive" id="div_voip_fix">
+                                <table class="table">
+                                    <thead id="div_voip_fix_thead"></thead>
+                                    <tbody id="div_voip_fix_tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-5">
+                            <div class="table-responsive" id="div_voip_time">
+                                <table class="table">
+                                    <thead id="div_voip_time_thead"></thead>
+                                    <tbody id="div_voip_time_tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-6 text-left">
+                        <div id="div_voip_paging">
+                            <span id="data-voip-paginator" style="display: none"></span>
+                            <ul class="pagination-flat pagination-sm twbs-prev-next"></ul>
+                            <div style="position: relative; top: -11px; display: inline-block">
+                                <input type="number" placeholder="Page..."
+                                       class="form-control go-page-input-voip"
+                                       style="display: inline-block; width: 50px">
+                                <button class="btn btn-default go-page-btn">Go</button>
+                                <select class="form-control limit-page-input-voip" style="display: inline-block; width: 50px">
+                                    <option value="20" th:selected="${itemPerPage} == '20'">20</option>
+                                    <option value="30" th:selected="${itemPerPage} == '30'">30</option>
+                                    <option value="50" th:selected="${itemPerPage} == '50'">50</option>
+                                </select>
+                                <span>items/page</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a data-toggle="modal" id="delete-opener-voip" class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></a>
+                        <a data-toggle="modal" id="refresh-opener-voip" class="btn btn-default"><i class="glyphicon glyphicon-refresh"></i></a>
+                        <a data-toggle="modal" id="export-opener-voip" class="btn btn-default"><i class="glyphicon glyphicon-save"></i></a>
+                        <a data-toggle="modal" id="chart-opener-voip" class="btn btn-default"><i class="glyphicon glyphicon-stats"></i></a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

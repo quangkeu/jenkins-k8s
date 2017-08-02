@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UMP | User Management</title>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pagination/bs_pagination.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/plugins/notifications/pnotify.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/uploaders/fileinput.min.js"></script>
+
+    <script type="text/javascript" src="/ump/user.js"></script>
+    <style>
+        .formFilter .form-group {
+            padding-bottom: 10px;
+        }
+    </style>
+
+</head>
+<body>
+<div layout:fragment="content" class="page-container" id="provisioning-page">
+    <div class="page-content">
+
+        <div th:replace="user/fragments/user_sidebar::userSidebar"></div>
+
+        <div class="content-wrapper">
+            <div class="panel panel-flat">
+
+                <div class="panel-body">
+
+                    <!--modal-->
+                    <div th:replace="user/modal/form_user_modal::formUserModal"></div>
+                    <div th:replace="user/modal/confirm_reset_password_modal::confirmResetPassword"></div>
+                    <div th:replace="user/modal/confirm_remove_modal::confirmRemove"></div>
+                    <!-- /modal-->
+
+                    <div>
+                        <form action="/user" class="form-horizontal formFilter">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">User name:</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="user_name" class="form-control" placeholder="Username..."
+                                                   th:value="${request.get('user_name')}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label col-sm-4">Full name:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="full_name" class="form-control" placeholder="Full name..."
+                                               th:value="${request.get('full_name')}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label col-sm-4">Group filter:</label>
+                                    <div class="col-sm-8">
+                                        <input type="hidden" name="device_group_ids" th:value="${request.get('device_group_ids')}">
+                                        <select class="selectDeviceGroup" multiple="multiple">
+                                            <option th:each="deviceGroupItem:${deviceGroups}"
+                                                    th:value="${deviceGroupItem.id}" th:text="${deviceGroupItem.name}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Email:</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="email" class="form-control" placeholder="Email..."
+                                                   th:value="${request.get('email')}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-sm-8">
+                                        <input type="text" name="all" class="form-control" placeholder="Search some thing..."
+                                               th:value="${request.get('all')}">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <button style="display: none;" type="submit" class="btn btn-icon btn-default"> <i class="icon-search4"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <a href="javascript:void(0)" class="btn btn-raised btn-danger removeBtn">
+                                        <i class="position-left icon-minus3"></i> DELETE</a>
+                                    <a href="javascript:void(0)" class="btn btn-raised btn-primary createBtn">
+                                        <i class="position-left icon-plus3"></i> NEW USER</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-flat">
+                <div th:if="${userPaginator.totalElements == 0}" class="panel-body">
+                    <div th:replace="fragments/alert/no_data_result::no_data_result"></div>
+                </div>
+
+                <div th:if="${userPaginator.totalElements > 0}" class="table-responsive">
+                    <table class="table table-hover tableList">
+                        <thead>
+                        <tr>
+                            <th> <input type="checkbox" class="checkboxAll"></th>
+                            <th> USERNAME</th>
+                            <th> FULL NAME</th>
+                            <th> EMAIL</th>
+                            <th> TELEPHONE</th>
+                            <th> GROUP FILTER</th>
+                            <th> ROLE</th>
+                            <th> DESCRIPTION</th>
+                            <th class="text-right"> ACTION</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="userItem: ${userPaginator.content}"
+                            th:if="${userItem.userName != 'ump'}"
+                            th:data-id="${userItem.id}" class="itemRow" style="cursor: pointer">
+                            <td class="unbindClick">
+                                <input type="checkbox" class="checkboxRow" th:data-id="${userItem.id}">
+                            </td>
+                            <td th:text="${userItem.userName}" class="colUserName"></td>
+                            <td th:text="${userItem.fullName}" class="colFulName"></td>
+                            <td th:text="${userItem.email}" class="colEmail"></td>
+                            <td th:text="${userItem.phone}"></td>
+                            <td>
+                                <span th:each="groupDeviceItem: ${userItem.deviceGroupNames}">
+                                    <label th:text="${groupDeviceItem}" class="label label-default"></label>&nbsp;
+                                </span>
+                            </td>
+                            <td>
+                                <span th:each="roleNameItem: ${userItem.roleNames}">
+                                    <label th:text="${roleNameItem}" class="label label-default"></label>&nbsp;
+                                </span>
+                            </td>
+                            <td th:text="${userItem.description}"></td>
+                            <td nowrap class="text-right unbindClick">
+                                <ul class="icons-list">
+                                    <li>
+                                        <a href="javascript:void(0)" class="text-primary editItemBtn" title="EDIT" th:data-id="${userItem.id}"><i class="icon-pencil5"></i></a>
+                                    </li>
+                                    <li th:if="${!#lists.contains(userItem.roleNames, 'SuperAdmin') && currentUsername != userItem.userName}">
+                                        <a href="javascript:void(0)" class="text-danger removeItemBtn" title="DELETE" th:data-id="${userItem.id}"><i class="icon-trash"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="text-success resetPasswordItemBtn" title="RESET PASSWORD" th:data-id="${userItem.id}"><i class="icon-wrench"></i></a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <span class="dataPagination" th:attrappend="data-number=${userPaginator.number}, data-totalPages=${userPaginator.totalPages}" style="display: none"></span>
+                    <ul class="pagination-flat pagination-sm listPage"></ul>
+                    <div style="position: relative; top: -11px; display: inline-block">
+                        <input type="number" placeholder="Page..." class="form-control inputGoPage"  style="display: inline-block; width: 50px">
+                        <button class="btn btn-default goPageBtn">Go</button>
+                        <select class="form-control inputLimitPage" style="display: inline-block; width: 50px">
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                        </select>
+                        <span>items/page</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

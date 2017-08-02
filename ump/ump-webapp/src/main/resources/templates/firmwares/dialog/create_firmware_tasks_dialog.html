@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<!--create firmware dialog-->
+<div th:fragment="create-firmware-tasks-type-dialog" id="create-firmware-tasks-type-dialog" title="Firmware Tasks">
+    <form class="form-horizontal " novalidate="novalidate" action="#" method="POST"
+          th:action="@{/firmwares/create-task}" th:object="${firmwareTask}"
+          enctype="multipart/form-data">
+
+        <input type="hidden" id="id" th:field="*{id}" value="">
+
+        <div class="form-group">
+            <label class="col-lg-4 control-label" th:text="#{group.tree.text}">Group Tree</label>
+            <div class="col-lg-8">
+                <select th:field="*{groupId}" class="form-control">
+                    <option th:each="group : ${areaGroups}" th:value="${group.id}" th:text="${group.name}"></option>
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-4 control-label" th:text="#{firmware.type}">Type</label>
+            <div class="col-lg-8">
+                <select th:field="*{type}" class="form-control">
+                    <option value="1" th:text="#{label.new.contact}">New contact</option>
+                    <option value="0" th:text="#{label.now}">Now</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary legitRipple" th:text="#{label.saveButton}">Save <i
+                    class="icon-arrow-right14 position-right"></i></button>
+            <button type="button" id="create_device-dialog-close" class="btn btn-warning text-center"
+                    th:text="#{label.cancelButton}">Cancel
+            </button>
+        </div>
+    </form>
+</div>
+<!--/create firmware dialog -->
+</body>
+</html>

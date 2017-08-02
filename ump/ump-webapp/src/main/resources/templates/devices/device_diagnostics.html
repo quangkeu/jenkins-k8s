@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Device Diagnostics</title>
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/uniform.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_all.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/trees/fancytree_childcounter.js"></script>
+
+    <script type="text/javascript" src="/assets/js/plugins/tables/datatables/datatables.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/tables/datatables/extensions/select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pagination/bs_pagination.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <!-- /theme JS files -->
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/switchery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/switch.min.js"></script>
+    <!-- App js files -->
+    <script type="text/javascript" src="/ump/device_diagnostic.js"></script>
+</head>
+<body>
+
+
+
+<div class="page-container" layout:fragment="content">
+
+    <div class="sidebar sidebar-main sidebar-default">
+        <h4><i class="position-left"></i>
+            <span class="text-semibold" th:text="#{device.list}"></span>
+        </h4>
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href="/"><span th:text="#{device.listTitle}"></span></a></li>
+            <li><a th:href="@{'/devices/device_info/'} + ${deviceID}"><span th:text="#{device.deviceInfo}"></span></a></li>
+            <li><a th:href="@{'/devices/device_settings/'} + ${deviceID}"><span th:text="#{device.deviceSettings}"></span></a></li>
+            <li><a th:href="@{'/devices/device_advanced_view/'} + ${deviceID}"><span th:text="#{device.deviceAdvancedView}"></span></a></li>
+            <li><a th:href="@{'/devices/device_customRPC/'} + ${deviceID}"><span th:text="#{device.deviceCustomRPC}"></span></a></li>
+            <li><a th:href="@{'/devices/device_file_download/'} + ${deviceID}"><span th:text="#{device.deviceFileDownload}"></span></a></li>
+            <li><a th:href="@{'/devices/device_file_upload/'} + ${deviceID}"><span th:text="#{device.deviceFileUpload}"></span></a></li>
+            <li class="active"><a th:href="@{'/devices/device_diagnostics/'} + ${deviceID}"><span th:text="#{device.deviceDiagnostics}"></span></a></li>
+            <li><a th:href="@{'/devices/device_activity/'} + ${deviceID}"><span th:text="#{device.deviceLogs}"></span></a></li>
+        </ul>
+
+    </div>
+
+    <div class="panel">
+        <!--<div class="sidebar sidebar-main sidebar-default">-->
+        <!--<div class="sidebar-content">-->
+
+        <div class="sidebar-category sidebar-category-visible" style="background-color: white;">
+            <div class="groupTree-content">
+                <h5 class="text-uppercase">
+                    <div class="btn-group" style="padding-right: 15px;">
+                        <a id="requested" class="btn btn-success">Requested</a>
+                        <a id="completed" class="btn btn-default">Completed</a>
+                        <a id="errors" class="btn btn-danger">Errors</a>
+                    </div>
+                    <span th:if="${showAddTask=='true'}" style="padding-left:5px;padding-right: 15px;">
+                                 <a class="icon-plus3" th:href="@{'/devices/device_diagnostics/create/' + ${deviceID}}"></a>
+                            </span>
+                    <span>NEW DIAGNOSTICS</span>
+                    <button class="btn btn-danger col-md-offset-9 text-right" id="confirm-remove-dialog-opener"> <i class="icon-trash"></i> <span th:text="#{button.delete}"></span></button>
+                </h5>
+                <hr>
+            </div>
+
+        </div>
+
+        <!--</div>-->
+        <!--</div>-->
+        <!--dialog confrim remove-->
+        <div id="confirm-remove-dialog" style="display:none;">
+            <div class="remove-dialog-input">
+                <input id="remove-dialog-input" th:class="#{grouptree.confirm.remove}" th:value="${deviceID}" type="hidden" placeholder="">
+                <div class="text-center">
+                    <button class="btn btn-primary text-center" role="button" id="confirm-remove-now-dialog" th:text="#{grouptree.button.remove}" >Remove</button>
+                    <button id="confirm-remove-dialog-close" class="btn btn-warning text-center" th:text="#{grouptree.creat.button.cancel}">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <!-- alert -->
+        <div class="row group-tree-body">
+            <div id="alerts" title="New Device Diagnostics" >
+                <div class="alert alert-success no-border" hidden="true" id="alert_success">
+                    <input id="alert_success_input" th:class="#{grouptree.alert_success}"  type="hidden">
+                    <button type="button" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold" ></span>
+                </div>
+                <div class="alert alert-primary no-border" hidden="true" id="alert_primary">
+                    <input id="alert_primary_input" th:class="#{grouptree.alert_primary}"  type="hidden">
+                    <button type="button" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold" ></span>
+                </div>
+            </div>
+            <div class="alert alert-success no-border" th:if="${paginator.totalPages == 0}">
+                <a href="#" class="close"><span>×</span></a>
+                <span class="text-bold">No data result.</span>
+            </div>
+            <div th:if="${paginator.totalPages > 0}">
+            <div class="datatable-scroll">
+
+                <table id="DataTables_Table_0" class="table datatable-sorting dataTable no-footer table-striped table-hover" role="grid" style="margin-left: 0px; width: 1000px;">
+                    <thead >
+                    <tr>
+                        <th rowspan="1" tabindex="0"
+                            colspan="1" aria-controls="DataTables_Table_0">
+                            <center>
+                                <input type="checkbox" id="checkAll" name="checkAll"/>
+                            </center>
+                        </th>
+                        <th th:each="key : ${paginator.indexParams.keySet()}"  tabindex="0"
+                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                            th:id="${paginator.indexParams.get(key)}">
+                            <a href="#" th:text="${paginator.indexParams.get(key)}" name="sortColumn" th:id="${key}"></a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:class="${task.status == 2 ? 'danger' : ''}" th:classappend="${task.status == 1 ? 'white' : 'success'}" th:each="task:${paginator.diagnosticTasks}" th:id="${task.id}" role="row" style ="cursor: pointer;">
+                        <td>
+                            <center> <input type="checkbox" class="myCheckBox" th:classappend="${task.id}" th:name="${task.diagnosticsName}"/></center>
+                        </td>
+                        <td th:each="key : ${paginator.indexParams.keySet()}" th:text="${task.parameters.get(key)}" th:class="row_diagnostic" th:data-href="@{'/devices/device_diagnostics/result/' + ${task.id}}" ></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-6" style="padding-top: 10px; width: 1000px;">
+                        <span id="data-data-model-paginator"
+                              th:attrappend="data-number=${paginator.number},
+                                             data-totalPages=${paginator.totalPages},
+                                             data-lastPage=${paginator.lastPage}" style="display: none"></span>
+                <ul class="pagination-flat pagination-sm twbs-prev-next"></ul>
+                <div style="position: relative; top: -11px; display: inline-block">
+                    <input type="number" min="1" th:max="${paginator.lastPage}" placeholder="Page..." class="form-control go-page-input"  style="display: inline-block; width: 50px">
+                    <button class="btn btn-default go-page-btn">Go</button>
+                    <select class="form-control limit-page-input" style="display: inline-block; width: 50px">
+                        <option value="20" th:selected="${itemPerPage} == '20'">20</option>
+                        <option value="30" th:selected="${itemPerPage} == '30'">30</option>
+                        <option value="50" th:selected="${itemPerPage} == '50'">50</option>
+                    </select>
+                    <span>items/page</span>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

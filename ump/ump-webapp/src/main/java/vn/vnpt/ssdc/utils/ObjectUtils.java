@@ -19,7 +19,7 @@ public class ObjectUtils {
         if (obj.getClass().isArray()) {
             return toObjectArray(obj);
         }
-        return new Object[]{ obj };
+        return new Object[]{obj};
     }
 
     public static boolean empty(Object object) {
@@ -38,5 +38,17 @@ public class ObjectUtils {
             return ((StringBuffer) object).length() == 0;
         }
         return false;
+    }
+
+    public static String validateObjectParent(String path) {
+        return path.endsWith(".") ? path.substring(0, path.length() - 1) : path;
+    }
+
+    public static String getNameOfPath(String fullPath) {
+        if (fullPath.contains(".")) {
+            String arr[] = fullPath.split("\\.");
+            fullPath = arr[arr.length - 1];
+        }
+        return fullPath;
     }
 }

@@ -2400,6 +2400,27 @@ table th[class*="col-"] {
 .table-hover > tbody > tr.info:hover > th {
   background-color: #caf1f6;
 }
+.table > thead > tr > td.search,
+.table > tbody > tr > td.search,
+.table > tfoot > tr > td.search,
+.table > thead > tr > th.search,
+.table > tbody > tr > th.search,
+.table > tfoot > tr > th.search,
+.table > thead > tr.search > td,
+.table > tbody > tr.search > td,
+.table > tfoot > tr.search > td,
+.table > thead > tr.search > th,
+.table > tbody > tr.search > th,
+.table > tfoot > tr.search > th {
+  background-color: #F6F792;
+}
+.table-hover > tbody > tr > td.search:hover,
+.table-hover > tbody > tr > th.search:hover,
+.table-hover > tbody > tr.search:hover > td,
+.table-hover > tbody > tr:hover > .search,
+.table-hover > tbody > tr.search:hover > th {
+  background-color: #F6F792;
+}
 .table > thead > tr > td.warning,
 .table > tbody > tr > td.warning,
 .table > tfoot > tr > td.warning,

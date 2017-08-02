@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div th:fragment="create_subsciber_dialog" id="create-subscriber-dialog" th:attr="title=#{subscriber.title.createDialog}">
+
+    <form class="form-horizontal" id="form-create-subscriber" action="" th:object="${newSubscriber}" th:action="@{'/subscriber/create'}" method="POST">
+        <fieldset class="content-group">
+            <hr>
+            <div class="form-group">
+                <label class="control-label col-lg-2"> Subscriber Id: <span class="text-danger">*</span></label>
+                <div class="col-lg-10">
+                    <input th:field="*{subscriberId}" type="text" class="form-control" placeholder="Write a string..." required="required">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2"> Subscriber Template: <span class="text-danger">*</span></label>
+                <div class="col-lg-10">
+                    <select th:value="*{subscriberDataTemplateId}" name="subscriberDataTemplateId" data-placeholder="- Select a template -" class="select2 form-control" required="required">
+                        <option></option>
+                        <option th:each="subTem:${listSubscriberTemplate}" th:value="${subTem.id}" th:text="${subTem.name}"></option>
+                    </select>
+                </div>
+            </div>
+
+        </fieldset>
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary"> <span th:text="#{button.create}"></span> <i class="icon-arrow-right14 position-right"></i></button>
+            <button type="button" class="btn btn-default modal-cancel"> <span th:text="#{button.cancel}"></span></button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div th:fragment="firmware_tree" class="sidebar sidebar-main sidebar-default">
+    <div class="device-type-sidebar">
+        <div class="sidebar-category sidebar-category-visible">
+            <div class="category-content">
+                <h5 class="text-uppercase"><span th:text="${treeTitle}">Device Types</span></h5>
+                <hr>
+                <div class="tree-default">
+                    <ul>
+                        <li th:each="keyL1:${tree.productClassesMap.keySet()}" class="expanded">
+                            <span th:text="${keyL1}"></span>
+                            <ul th:style="${currentDeviceType!=null && currentDeviceType.productClass==keyL2 ? 'display:block;':'display:none;'}">
+                                <li th:each="deviceType : ${tree.productClassesMap.get(keyL1)}" th:classappend="${tree.hasVersionNode ? 'expanded show-device-type-actions' : ''} + ' ' + ${deviceTypeId == deviceType.id ? 'selected' : ''}">
+                                    <span>
+                                        <a th:if="${tree.deviceVersionsMap.get(deviceType.id) != null && tree.deviceVersionsMap.get(deviceType.id).size() > 0}"
+                                           th:href="${'/firmwares/' + tree.deviceVersionsMap.get(deviceType.id).get(0).id}"
+                                           th:text="${deviceType.name + ' - ' + deviceType.productClass}"
+                                           class="a-no-color"> </a>
+
+                                        <span th:if="${tree.deviceVersionsMap.get(deviceType.id) == null || tree.deviceVersionsMap.get(deviceType.id).size() == 0}"
+                                              th:text="${deviceType.name + ' - ' + deviceType.productClass}"></span>
+
+                                        <i th:if="${showAddVersion=='true'}"
+                                           th:attr="data-device-type=${deviceType.toString()}"
+                                           class="icon-plus3 pull-right device-type-action-add"></i>
+                                    </span>
+                                    <ul>
+                                        <li th:each="deviceTypeVersion:${tree.deviceVersionsMap.get(deviceType.id)}"
+                                            th:class="${deviceTypeVersionId == deviceTypeVersion.id ? 'selected' : ''}">
+                                            <a href="#" th:href="${'/firmwares/' + deviceTypeVersion.id}"
+                                               th:text="${deviceTypeVersion.firmwareVersion}"
+                                               th:attr="data-device-type_version=${deviceType.toString()}" > </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

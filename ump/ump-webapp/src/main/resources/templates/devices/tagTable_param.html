@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Global stylesheets -->
+    <!--<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">-->
+    <link href="/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/extras/animate.min.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/tables/datatables/datatables.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/loaders/blockui.min.js"></script>
+    <!-- App js files -->
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="/ump/tasks.js"></script>
+
+</head>
+<body>
+<div id="dataTag" title="Tasks Tag">
+    <div th:replace="devices/alerts::alerts"></div>
+    <div class="datatable-scroll" id="dataInTag" th:if="${tag !=null}">
+        <div class="row">
+            <div class="col-md-6" th:each="key :${tag.parameters.keySet()}">
+                <div class="form-group col-md-12">
+                    <label class="text-black control-label col-md-6" th:text="${tag.parameters.get(key).shortName}"></label>
+                    <div class="col-md-6" th:text="${tag.parameters.get(key).value()}"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

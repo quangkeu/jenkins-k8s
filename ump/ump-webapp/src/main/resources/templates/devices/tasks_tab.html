@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Global stylesheets -->
+    <!--<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">-->
+    <link href="/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/extras/animate.min.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/widgets.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/effects.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/ripple.min.js"></script>
+    <script type="text/javascript" src="/assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/tables/datatables/datatables.min.js"></script>
+    <!-- App js files -->
+    <script type="text/javascript" src="/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="/ump/tasks.js"></script>
+
+</head>
+<body>
+<div th:fragment="tasks_tab" id="tasks_tab" title="Tasks Tag">
+
+    <div id="alerts_task">
+        <div class="alert alert-success no-border" hidden="true" id="_taskAlertSuccess">
+            <button type="button" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+            <span class="text-semibold" ></span>
+        </div>
+        <div class="alert alert-danger no-border" hidden="true" id="_taskAlertDanger">
+            <button type="button" class="close"><span>×</span><span class="sr-only">Close</span></button>
+            <span class="text-semibold" ></span>
+        </div>
+        <div class="alert alert-primary no-border" hidden="true" id="_taskAlertPrimary">
+            <button type="button" class="close" ><span>×</span><span class="sr-only">Close</span></button>
+            <span class="text-semibold" ></span>
+        </div>
+    </div>
+
+    <div class="datatable-scroll">
+
+        <table id="_tableTask" class="table  dataTable  table-striped table-hover"  cellspacing="0"
+               width="100%">
+            <thead>
+            <tr>
+
+                <th th:text="${columnName.get('device')}"  th:id="${columnName.get('device')}" tabindex="0" rowspan="1" colspan="1" aria-controls="_tableTask">
+                </th>
+                <th th:text="${columnName.get('_id')}"  th:id="${columnName.get('_id')}" tabindex="0" rowspan="1" colspan="1" aria-controls="_tableTask">
+                </th>
+                <th th:text="${columnName.get('name')}"  th:id="${columnName.get('name')}" tabindex="0" rowspan="1" colspan="1" aria-controls="_tableTask">
+                </th>
+                <th th:text="${columnName.get('timestamp')}" th:id="${columnName.get('timestamp')}"  tabindex="0" rowspan="1" colspan="1" aria-controls="_tableTask">
+                </th>
+                <th th:text="${columnName.get('fault.detail.Fault.FaultString')}" th:id="${columnName.get('fault.detail.Fault.FaultString')}" tabindex="0" rowspan="1" colspan="1" aria-controls="_tableTask">
+                </th>
+                <th th:text="${columnName.get('retries')}" th:id="${columnName.get('retries')}" tabindex="0" rowspan="1" colspan="1" aria-controls="_tableTask">
+                </th>
+                <th>
+                   Action
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task :${listTask}" role="row" th:id="'idRow_'+ ${task.parameters.get('_id')}" >
+                <td th:text="${task.parameters.get('device')}" ></td>
+                <td th:text="${task.parameters.get('_id')}" ></td>
+                <td th:text="${task.parameters.get('name')}" ></td>
+                <td th:text="${task.parameters.get('timestamp')}" ></td>
+                <td th:text="${task.parameters.get('fault.detail.Fault.FaultString')}" ></td>
+                <td th:text="${task.parameters.get('retries')} == '' ? '0' : ${task.parameters.get('retries')}" ></td>
+                <td>
+                <a href="#" th:text="Delete"  class="btn btn-danger text-center" role="button"
+                th:onclick="|deleteTask('${task.parameters.get('_id')}','${task.parameters.get('device')}')|"  th:id="'btnDelete_' + ${task.parameters.get('_id')}"   />
+                <a href="#" th:if="${task.parameters.get('retries') != '0' && task.parameters.get('retries') != ''}" th:text="Retry" class="btn btn-primary text-center" role="button"
+                   th:onclick="|retryTask('${task.parameters.get('_id')}','${task.parameters.get('device')}')|" th:id="'btnRetry_' + ${task.parameters.get('_id')}" />
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+</div>
+</body>
+</html>

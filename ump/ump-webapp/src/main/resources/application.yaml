@@ -1,4 +1,19 @@
 spring:
   thymeleaf:
     cache: false
-apiEndpointUrl: http://localhost:8090/api/
+  redis:
+    host: localhost
+    port: 6379
+  http:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  messages:
+      basename: messages/messages
+      cache-seconds: -1
+      encoding: UTF-8
+apiEndpointUrl: http://localhost:8090/api
+identityServiceEndpointUrl: http://localhost:8090/api
+identityWebApplicationUrl: http://localhost:8081/login
+fileEndpointUrl: http://localhost:7557/files
+acsEndpointUrl: http://localhost:7557

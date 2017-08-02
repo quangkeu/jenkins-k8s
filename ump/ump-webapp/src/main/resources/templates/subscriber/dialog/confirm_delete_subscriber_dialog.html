@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div th:fragment="confirm_delete_subscriber_dialog" id="confirm-delete-subscriber" th:attr="title=#{subscriber.title.confirmDelete}">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <form th:action="@{'/subscriber/delete/' + ${currentSubscriber.id}}" method="POST">
+                <button class="btn btn-danger" th:attr="subscriber-id=${currentSubscriber.id}"> <span th:text="#{button.delete}"></span></button>
+                <button class="btn btn-default modal-cancel"> <span th:text="#{button.cancel}"></span></button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

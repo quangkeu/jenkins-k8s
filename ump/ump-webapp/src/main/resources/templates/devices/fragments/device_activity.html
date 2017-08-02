@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>UMP | Device Activity</title>
+
+    <script type="text/javascript" src="/assets/js/plugins/pagination/bs_pagination.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/inputmask/jquery.inputmask.bundle.js"></script>
+    <script type="text/javascript" src="/ump/device_activity.js"></script>
+
+</head>
+<body>
+<div class="page-container" layout:fragment="content">
+    <div class="page-content">
+
+        <!--Sidebar-->
+        <div class="sidebar sidebar-main sidebar-default">
+            <h4><i class="position-left"></i>
+                <span class="text-semibold" th:text="#{device.list}"></span>
+            </h4>
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="/"><span th:text="#{device.listTitle}"></span></a></li>
+                <li><a th:href="@{'/devices/device_info/'} + ${deviceId}"><span th:text="#{device.deviceInfo}"></span></a></li>
+                <li><a th:href="@{'/devices/device_settings/'} + ${deviceId}"><span th:text="#{device.deviceSettings}"></span></a></li>
+                <li><a th:href="@{'/devices/device_advanced_view/'} + ${deviceId}"><span th:text="#{device.deviceAdvancedView}"></span></a></li>
+                <li><a th:href="@{'/devices/device_customRPC/'} + ${deviceId}"><span th:text="#{device.deviceCustomRPC}"></span></a></li>
+                <li><a th:href="@{'/devices/device_file_download/'} + ${deviceId}"><span th:text="#{device.deviceFileDownload}"></span></a></li>
+                <li><a th:href="@{'/devices/device_file_upload/'} + ${deviceId}"><span th:text="#{device.deviceFileUpload}"></span></a></li>
+                <li><a th:href="@{'/devices/device_diagnostics/'} + ${deviceId}"><span th:text="#{device.deviceDiagnostics}"></span></a></li>
+                <li class="active"><a th:href="@{'/devices/device_activity/'} + ${deviceId}"><span th:text="#{device.deviceLogs}"></span></a></li>
+            </ul>
+        </div>
+        <!--// Sidebar-->
+
+        <!--No data-->
+        <div th:if="${currentDevice == null}" class="panel panel-flat">
+            <div class="panel-body">
+                <div th:replace="fragments/alert/no_data_result::no_data_result"></div>
+            </div>
+        </div>
+        <!--// No data-->
+
+        <!--Main content-->
+        <div th:if="${currentDevice != null}"  class="panel panel-flat">
+
+            <div class="panel-heading">
+                <div class="rơw">
+                    <h6 class="col-md-6 text-primary"> Serial Number: <span th:text="${currentDevice.serialNumber()}"></span></h6>
+                    <h6 class="col-md-6 text-primary"> Manufacturer: <span th:text="${currentDevice.manufacturer()}"></span></h6>
+                </div>
+                <div class="rơw">
+                    <h6 class="col-md-6 text-primary"> Model Name: <span th:text="${currentDevice.modelName()}"></span></h6>
+                    <h6 class="col-md-6 text-primary"> Firmware/Software Version: <span th:text="${currentDevice.softwareVersion()}"></span></h6>
+                </div>
+                <div class="col-md-12"> <hr> </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <h6 class="text-primary"> DEVICE ACTIVITY</h6>
+
+                    <div class="row">
+                    <form class="form-horizontal formFilterLogging" method="get" novalidate="novalidate">
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <div class="radio">
+                                        <label> <input type="radio" name="showFilter" value="showAll"> Show All </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="radio">
+                                        <label> <input type="radio" name="showFilter" value="showByDate"> Show By Date </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right"> From:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control fromDateTime" name="fromDateTime"
+                                               placeholder="Enter a date time..."
+                                               th:value="${request.get('fromDateTime')}"/>
+                                        <span class="input-group-addon"> <span
+                                                class="glyphicon glyphicon-calendar"></span> </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label text-right"> To:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control toDateTime" name="toDateTime"
+                                               placeholder="Enter a date time..."
+                                               th:value="${request.get('toDateTime')}"/>
+                                        <span class="input-group-addon"> <span
+                                                class="glyphicon glyphicon-calendar"></span> </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-default">SEARCH</button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 text-right">
+                            <div class="form-group">
+                                <a class="btn btn-danger btnDelete">DELETE</a>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th class="text-center" width="36px"> <input type="checkbox" class="checkboxAll"></th>
+                                <th> Task Name</th>
+                                <th> Parameter</th>
+                                <th> Created</th>
+                                <th> Completed</th>
+                                <th> Error Code</th>
+                                <th> Error Text</th>
+                                <th> Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="loggingDeviceActivityItem:${loggingDeviceActivities}">
+                                <td align="center">
+                                    <input type="checkbox" class="checkboxRow" th:data-id="${loggingDeviceActivityItem.id}">
+                                </td>
+                                <td nowrap th:text="${loggingDeviceActivityItem.taskNameView}"></td>
+                                <td th:text="${loggingDeviceActivityItem.parameterView}"></td>
+                                <td nowrap th:text="${loggingDeviceActivityItem.createdTime}"></td>
+                                <td nowrap th:text="${loggingDeviceActivityItem.completedTime}"></td>
+                                <td nowrap th:text="${loggingDeviceActivityItem.errorCode}"></td>
+                                <td nowrap th:text="${loggingDeviceActivityItem.errorText}"></td>
+                                <td class="text-right">
+                                    <a class="btn btn-xs btn-link"
+                                       th:href="${'/logging/device?fromDate=' + loggingDeviceActivityItem.createdTime
+                                                    + '&name=' + loggingDeviceActivityItem.taskId
+                                                    + '&actor=' + currentDevice.id
+                                                    + '&limit=1'
+                                                    }"
+                                    >SHOW LOG</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!--Paging-->
+                    <hr>
+                    <div class="col-md-12">
+                        <span th:data-number="${request.get('page')}" th:data-totalPages="${summary.get('totalPages')}" class="dataPagination" style="display: none"></span>
+                        <ul class="pagination-flat pagination-sm listPage"></ul>
+                        <div style="position: relative; top: -11px; display: inline-block">
+                            <input type="number" placeholder="Page..." class="form-control inputGoPage"  style="display: inline-block; width: 50px">
+                            <button class="btn btn-default goPageBtn">Go</button>
+                            <select class="form-control inputLimitPage" style="display: inline-block; width: 50px">
+                                <option th:if="${request.get('limit') != null && request.get('limit') != '20' && request.get('limit') != '30' && request.get('limit') != '50'}"
+                                        th:text="${request.get('limit')}"
+                                        th:value="${request.get('limit')}"></option>
+                                <option value="20" th:selected="${request.get('limit') == '20' ? true : false}">20</option>
+                                <option value="30" th:selected="${request.get('limit') == '30' ? true : false}">30</option>
+                                <option value="50" th:selected="${request.get('limit') == '50' ? true : false}">50</option>
+                            </select>
+                            <span>items/page</span>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <!--//Paging-->
+
+                </div>
+
+            </div>
+
+            <!--modal-->
+            <!--<div th:replace="devices/dialog/add_object_modal::add_object_modal"></div>-->
+            <!-- /modal-->
+
+        </div>
+        <!--// Main content-->
+
+    </div>
+</div>
+</body>
+</html>

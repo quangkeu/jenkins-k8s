@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>UMP | POLICY</title>
+
+    <script type="text/javascript" src="/assets/js/plugins/pagination/bs_pagination.min.js"></script>
+
+    <script type="text/javascript" src="/ump/policy.js"></script>
+    <script type="text/javascript" src="/ump/list_policy.js"></script>
+</head>
+<body>
+<div class="page-container" layout:fragment="content">
+    <div class="page-content">
+
+        <div th:replace="policy/fragments/policy_sidebar::policy_sidebar"></div>
+
+        <div class="content-wrapper">
+            <div class="panel panel-flat">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            <a class="btn btn-raised legitRipple btn-danger remove-policy-opener">
+                                <i class="position-left icon-minus3"></i> <span th:text="#{button.delete}"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:if="${policyJobPaginator.totalElements == 0}" style="padding-top: 20px;">
+                        <div th:replace="fragments/alert/no_data_result::no_data_result"></div>
+                    </div>
+
+                    <div class="row" th:if="${policyJobPaginator.totalElements > 0}">
+                        <div class="con-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover policy-table">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="checkbox-all"></th>
+                                        <th>Policy Name</th>
+                                        <th>Number Of Execution</th>
+                                        <th>Group filter</th>
+                                        <th>Operation</th>
+                                        <th>Created</th>
+                                        <th>Schedule</th>
+                                        <th>Completed</th>
+                                        <th width="44px">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="policy-row" style="cursor: pointer"
+                                        th:each="policyJobItem:${policyJobPaginator.content}"
+                                        th:data-policyId="${policyJobItem.id}"
+                                        th:data-actionName="${policyJobItem.actionName}">
+                                        <td class="unbind-click"><input type="checkbox" class="checkbox-row" th:data-policyId="${policyJobItem.id}" th:if="${policyJobItem.status != 'EXECUTE'}"></td>
+                                        <td th:text="${policyJobItem.name}"></td>
+                                        <td align="right" th:text="${policyJobItem.getNumberOfExecutions()}"></td>
+                                        <td th:text="${policyJobItem.getDeviceGroupName()}"></td>
+                                        <td>
+                                            <span class="label label-default" th:if="${policyJobItem.actionName == 'parameters'}">Update configuration</span>
+                                            <span class="label label-default" th:if="${policyJobItem.actionName != 'parameters'}" th:text="${policyJobItem.actionName}"></span>
+                                        </td>
+                                        <td nowrap th:text="${#dates.format(policyJobItem.created, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                        <td nowrap th:text="${#dates.format(policyJobItem.startAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                        <td></td>
+                                        <td nowrap align="right" class="unbind-click">
+                                            <ul class="icons-list">
+                                                  <li><a href="javascript:void(0)" class="text-primary execute-btn"
+                                                         th:if="${policyJobItem.status != 'EXECUTE'}"
+                                                         th:data-policyId="${policyJobItem.id}"><i class="icon-play3"></i></a></li>
+
+                                                  <li><a href="javascript:void(0)" class="text-warning stop-btn"
+                                                         th:if="${policyJobItem.status == 'EXECUTE'}"
+                                                         th:data-policyId="${policyJobItem.id}"><i class="icon-stop"></i></a></li>
+
+
+                                                <li th:if="${policyJobItem.actionName == 'parameters'}"><a class="text-success"
+                                                       th:href="${'/policy-configuration/' + policyJobItem.id + '/edit'}"
+                                                       th:if="${policyJobItem.status == 'INIT'}"
+                                                       th:data-policyId="${policyJobItem.id}"> <i class="icon-pencil5"></i></a></li>
+
+                                                <li th:if="${policyJobItem.actionName != 'parameters'}"><a class="text-success"
+                                                       th:href="${'/policy-operation/' + policyJobItem.id + '/edit'}"
+                                                       th:if="${policyJobItem.status == 'INIT'}"
+                                                       th:data-policyId="${policyJobItem.id}"> <i class="icon-pencil5"></i></a></li>
+
+                                                  <!--<li><a href="javascript:void(0)" class="text-default edit-btn" th:data-policyId="${policyJobItem.id}"><i class="icon-pencil5"></i></a></li>-->
+
+                                                <li><a href="javascript:void(0)" class="text-danger delete-btn"
+                                                       th:if="${policyJobItem.status != 'EXECUTE'}"
+                                                         th:data-policyId="${policyJobItem.id}"><i class="icon-trash"></i></a></li>
+                                              </ul>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                                <span id="data-policy-paginator" th:attrappend="data-number=${policyJobPaginator.number}, data-totalPages=${policyJobPaginator.totalPages}" style="display: none"></span>
+                                <ul class="pagination-flat pagination-sm twbs-prev-next"></ul>
+                                <div style="position: relative; top: -11px; display: inline-block">
+                                    <input type="number" placeholder="Page..." class="form-control go-page-input"  style="display: inline-block; width: 50px">
+                                    <button class="btn btn-default go-page-btn">Go</button>
+                                    <select class="form-control limit-page-input" style="display: inline-block; width: 50px">
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                    <span>items/page</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

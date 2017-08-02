@@ -1,15 +1,11 @@
 package vn.vnpt.ssdc.api.client;
 
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import vn.vnpt.ssdc.api.model.UmpApiResponse;
 import vn.vnpt.ssdc.api.model.SsdcEntity;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * Generic CRUD api client
@@ -23,6 +19,14 @@ public class GenericApiClient<ID extends Serializable,T extends SsdcEntity<ID>> 
     protected Class<T> entityClass;
 
     public T create(T entity) {
+//        ResponseEntity responseEntity = restTemplate.postForEntity(endpointUrl,entity,Object.class);
+//        if(responseEntity.getStatusCodeValue() == 200) {
+//            return (T)responseEntity.getBody();
+//        } else {
+//            UmpApiResponse umpApiResponse = (UmpApiResponse)responseEntity.getBody();
+//            throw new RuntimeException(umpApiResponse.getErrorMessage());
+//        }
+
         return restTemplate.postForObject(endpointUrl,entity,entityClass);
     }
 
@@ -37,5 +41,4 @@ public class GenericApiClient<ID extends Serializable,T extends SsdcEntity<ID>> 
     public void delete(ID id) {
         restTemplate.delete(endpointUrl + "/" + id);
     }
-
 }

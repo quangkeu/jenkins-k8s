@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+
+</head>
+<body ng-controller="AlarmListController">
+<div th:fragment="alarm_list_fragment">
+
+    <div class="panel panel-flat panel-body">
+
+        <div class="alert alert-danger no-border" hidden="true" id="remove_alert_danger">
+            <a href="#" class="close" id="alert_danger_btn"><span>×</span></a>
+            <span class="text-bold" >Status Alarms is not Cleared</span>
+        </div>
+
+        <div class="alert alert-success no-border" th:if="${alertClearRemove != ''}">
+            <a href="#" data-dismiss="alert" class="close"><span>×</span></a>
+            <span class="text-bold" th:text="${alertClearRemove}"></span>
+        </div>
+
+        <div class="row">
+            <input type="hidden" id="data-severity-alarm" th:value="${dataSeverityAlarm}">
+            <div class="form-group col-md-4">
+                <label class="col-sm-4 control-label margin-label">Serial Number</label>
+                <div class="col-sm-8">
+                    <input class="form-control" id="serial-number-search" type="text"
+                           th:value="${paginator.serialNumberSearch}">
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="col-sm-4 control-label margin-label">Severity</label>
+                <div class="col-sm-8">
+                    <select class="select2 form-control"
+                            name="severity-data-search" id="severity-data-search"
+                            th:data-placeholder="#{select.search.placeholder}">
+                        <option value=""></option>
+                        <option value="Critical" th:selected="${paginator.severitySearch} == 'Critical'">Critical</option>
+                        <option value="Minor" th:selected="${paginator.severitySearch} == 'Minor'">Minor</option>
+                        <option value="Major" th:selected="${paginator.severitySearch} == 'Major'">Major</option>
+                        <option value="Warning" th:selected="${paginator.severitySearch} == 'Warning'">Warning</option>
+                        <option value="Info" th:selected="${paginator.severitySearch} == 'Info'">Info</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="col-sm-5 control-label margin-label">Alarm Type</label>
+                <div class="col-sm-7">
+                    <select class="select2 form-control"
+                            name="alarm-type-search" id="alarm-type-search"
+                            th:data-placeholder="#{select.search.placeholder}">
+                        <option value=""></option>
+                        <option value="REQUEST_FAIL" th:selected="${paginator.alarmTypeSearch}=='REQUEST_FAIL'">Request failed</option>
+                        <option value="CONFIGURATION_FAIL" th:selected="${paginator.alarmTypeSearch}=='CONFIGURATION_FAIL'">Configuration device failed</option>
+                        <option value="UPDATE_FIRMWARE_FAIL" th:selected="${paginator.alarmTypeSearch}=='UPDATE_FIRMWARE_FAIL'">Update firmware failed</option>
+                        <option value="REBOOT_FAIL" th:selected="${paginator.alarmTypeSearch}=='REBOOT_FAIL'">Reboot failed</option>
+                        <option value="FACTORY_RESET_FAIL" th:selected="${paginator.alarmTypeSearch}=='FACTORY_RESET_FAIL'">Factory reset failed</option>
+                        <option value="PARAMETER_VALUE" th:selected="${paginator.alarmTypeSearch}=='PARAMETER_VALUE'">Alarm threshold</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="col-sm-4 control-label margin-label">Status</label>
+                <div class="col-sm-8">
+                    <select class="select2 form-control"
+                            name="status-search" id="status-search"
+                            th:data-placeholder="#{select.search.placeholder}">
+                        <option value=""></option>
+                        <option value="Active" th:selected="${paginator.statusSearch} == 'Active'">Active</option>
+                        <option value="Cleared" th:selected="${paginator.statusSearch} == 'Cleared'">Cleared</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="col-sm-4 control-label margin-label">Group Filter</label>
+                <div class="col-sm-8">
+                    <select class="select2 form-control"
+                            name="alarm-name-search" id="group-filter-search"
+                            th:data-placeholder="#{select.search.placeholder}">
+                        <option value=""></option>
+                        <option th:each="subTem:${groupFilterList}"
+                                th:value="${subTem.name}"
+                                th:selected="${ subTem.name==paginator.groupFilterSearch }"
+                                th:text="${subTem.name}"></option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="col-sm-5 control-label margin-label">Alarm Name</label>
+                <div class="col-sm-7">
+                    <select class="select2 form-control"
+                            name="alarm-name-search" id="alarm-name-search"
+                            th:data-placeholder="#{select.search.placeholder}">
+                        <option value=""></option>
+                        <option th:each="subTem:${paginator.alarmNameList}"
+                                th:value="${subTem}"
+                                th:selected="${ subTem==paginator.alarmNameSearch }"
+                                th:text="${subTem}"></option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="col-sm-4 control-label margin-label" id="raised-from-search-label">Raised time from</label>
+                <div class="col-sm-8 input-group date" id='datetimepicker1'>
+                    <input id="raised-from-search" type='text' class="form-control" th:value="${paginator.raisedFromSearch}"/>
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="col-sm-3 control-label margin-label" id="raised-to-search-label">to</label>
+                <div class="col-sm-9 input-group date" id='datetimepicker2'>
+                    <input id="raised-to-search" type='text' class="form-control" th:value="${paginator.raisedToSearch}"/>
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="input-group col-md-4">
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit" id="search-all-btn">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </div>
+                <input type="text" class="form-control" th:value="${paginator.allSearch}"
+                       placeholder="Search" id="search-all">
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="pull-right">
+                <a class="btn btn-primary" id="confirm-clear-multi-alarm">Clear</a>
+                <a class="btn btn-danger" id="confirm-remove-multi-alarm">Remove</a>
+            </div>
+        </div>
+
+    </div>
+
+<div class="panel panel-flat panel-body">
+
+    <div id="confirm-single-dialog" style="display:none;">
+        <div class="text-center">
+            <button class="btn btn-primary text-center" role="button" id="confirm-single-dialog-now">
+                Clear
+            </button>
+            <button id="confirm-single-dialog-later" class="btn btn-warning text-center">Cancel</button>
+        </div>
+    </div>
+
+    <div id="confirm-single-remove-dialog" style="display:none;">
+        <div class="text-center">
+            <button class="btn btn-primary text-center" role="button" id="confirm-single-remove-dialog-now">
+                Remove
+            </button>
+            <button id="confirm-single-remove-dialog-later" class="btn btn-warning text-center">Cancel</button>
+        </div>
+    </div>
+
+    <div class="alert alert-success no-border" th:if="${paginator.totalPages == 0}">
+        <a href="#" class="close"><span>×</span></a>
+        <span class="text-bold">No data result.</span>
+    </div>
+
+    <div th:if="${paginator.totalPages > 0}">
+        <div class="row">
+            <div class="datatable-scroll">
+
+                <table id="dt_alarms"
+                       class=" table datatable-sorting dataTable no-footer table-striped table-hover"
+                       cellspacing="0"
+                       width="100%">
+                    <thead>
+                    <tr>
+                        <th rowspan="1" tabindex="0"
+                            colspan="1" aria-controls="dt_alarms">
+                            <center>
+                                <input type="checkbox" id="checkAll" name="checkAll"/>
+                            </center>
+                        </th>
+
+                        <th tabindex="0"
+                            aria-controls="dt_alarms" rowspan="1" colspan="1" id="_id" hidden="true">
+                            <a href="#">ID</a>
+                        </th>
+
+                        <th tabindex="0"
+                            aria-controls="dt_alarms" rowspan="1" colspan="1">
+                            <span id="serialNumber">Serial Number</span>
+                        </th>
+                        <th tabindex=""
+                            aria-controls="dt_alarms" rowspan="1" colspan="1">
+                            <span id="groupFilter">Group Filter</span>
+                        </th>
+                        <th tabindex="0"
+                            aria-controls="dt_alarms" rowspan="1" colspan="1">
+                            <span id="severity">Severity</span>
+                        </th>
+                        <th tabindex="0"
+                            aria-controls="dt_alarms" rowspan="1" colspan="1">
+                            <span id="alarmName">Alarm Name</span>
+                        </th>
+                        <th tabindex="0"
+                            aria-controls="dt_alarms" rowspan="1" colspan="1">
+                            <span id="raisedTime">Raised Time</span>
+                        </th>
+                        <th tabindex="0"
+                            aria-controls="dt_alarms" rowspan="1" colspan="1">
+                            <span id="status">Status</span>
+                        </th>
+                        <th tabindex="0"
+                            aria-controls="dt_alarms" rowspan="1" colspan="1">
+                            <span id="description">Description</span>
+                        </th>
+                        <th align="center" width="36px">Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="alarm:${paginator.alarmList}" role="row">
+                        <td>
+                            <center><input type="checkbox" class="myCheckBox"
+                                           th:id="${alarm.id}"
+                                           th:name="${alarm.alarmTypeName} + '#' + ${alarm.status}"/></center>
+                        </td>
+                        <td th:text="${alarm.id}" hidden="true" name="cannotChange"
+                            style="max-width:150px;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word"></td>
+                        <td th:text="${alarm.deviceId}" name="cannotChange"
+                            style="max-width:150px;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word"></td>
+                        <td th:text="${alarm.deviceGroupName}" name="cannotChange"
+                            style="max-width:150px;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word"></td>
+                        <td th:text="${alarm.severity}" name="cannotChange" class="severity"
+                            style="max-width:150px;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word"></td>
+                        <td th:text="${alarm.alarmName}" name="cannotChange"
+                            style="max-width:150px;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word"></td>
+                        <td th:text="${alarm.raisedConvert}" name="cannotChange"
+                            style="max-width:150px;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word"></td>
+                        <td th:text="${alarm.status}" name="cannotChange"
+                            style="max-width:150px;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word"></td>
+                        <td th:text="${alarm.description}" name="cannotChange"
+                            style="max-width:150px;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word"></td>
+                        <td align="center">
+                            <ul class="icons-list">
+                                <li><a href="javascript:void(0)" class="alarm-clear-single-opener"
+                                       th:attr="data-alarm=${alarm.id},data-alarmName=${alarm.alarmName}
+                                        ,data-status=${alarm.status}">
+                                    <i class="glyphicon glyphicon-pencil" th:if="${alarm.status != 'Cleared'}"></i>
+                                </a></li>
+                                <li><a href="javascript:void(0)" class="alarm-remove-single-opener"
+                                       th:attr="data-alarm=${alarm.id}
+                                       ,data-alarmName=${alarm.alarmName}
+                                       ,data-alarmStatus=${alarm.status}">
+                                    <i class="glyphicon glyphicon-trash red"></i>
+                                </a></li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 5px;">
+                <span id="data-alarm-paginator"
+                      th:attrappend="data-number=${paginator.number},
+                                             data-totalPages=${paginator.totalPages},
+                                             data-lastPage=${paginator.lastPage}" style="display: none"></span>
+                <ul class="pagination-flat pagination-sm twbs-prev-next"></ul>
+                <div style="position: relative; top: -11px; display: inline-block">
+                    <input type="number" min="1" th:max="${paginator.lastPage}" placeholder="Page..."
+                           class="form-control go-page-input" style="display: inline-block; width: 50px">
+                    <button class="btn btn-default go-page-btn">Go</button>
+                    <select class="form-control limit-page-input" style="display: inline-block; width: 50px">
+                        <option value="20" th:selected="${itemPerPage} == '20'">20</option>
+                        <option value="30" th:selected="${itemPerPage} == '30'">30</option>
+                        <option value="50" th:selected="${itemPerPage} == '50'">50</option>
+                    </select>
+                    <span>items/page</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</div>
+
+</body>
+</html>
