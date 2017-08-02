@@ -2,10 +2,10 @@
 
 homeDir=$(pwd)
 # Build ump-core
-cd $homeDir/ump/ump-core/ && mvn clean deploy
+cd $homeDir/jenkins-k8s/ump/ump-core/ && mvn clean deploy
 
 # Build ump-backend
-cd $homeDir/ump/ump-backend && mvn clean deploy
+cd $homeDir/jenkins-k8s/ump/ump-backend && mvn clean deploy
 
 # Build ump-webapp
-cd $homeDir/ump/ump-webapp && mvn clean deploy
+cd $homeDir/jenkins-k8s/ump/ump-webapp && mvn clean deploy
