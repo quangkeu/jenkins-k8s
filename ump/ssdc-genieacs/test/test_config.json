@@ -1,0 +1,15 @@
+{
+  "NUM_WORKERS" : 1,
+  "DEVICES" : [
+    {
+      "deviceTemplate": "huawei_bm632a",
+      "numDevices": 10,
+      "autoCreateSoftwareVersion": false
+    },
+    {
+      "deviceTemplate": "huawei_bm632w",
+      "numDevices": 10,
+      "autoCreateSoftwareVersion": false
+    }
+  ]
+}

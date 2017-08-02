@@ -1,0 +1,14 @@
+*~
+.npmignore
+
+config/*
+!config/*-sample.*
+!config/custom_commands
+
+debug/*
+!debug/.gitkeep
+
+lib/*.coffee
+tools/*.coffee
+test/*.coffee
+
