@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: ump-app
+  name: ump-app
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    name: ump-webapp
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    name: ump-webapp
+  name: ump-rc
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ump-webapp
+    spec:
+      containers:
+      - image: 10.84.20.62:8082/admin/ump-app
+        name: ump-app
+        ports:
+        - name: ump-app
+          containerPort: 8080
+          hostPort: 8080
