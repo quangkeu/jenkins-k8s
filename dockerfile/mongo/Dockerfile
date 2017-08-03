@@ -14,10 +14,10 @@ RUN echo "bind_ip = 0.0.0.0" >> /etc/mongodb.conf
 VOLUME ["/data/db"]
 
 # Define working directory.
-WORKDIR /data
+#WORKDIR /data
 
 # Define default command.
-CMD ["mongod"]
+#CMD ["mongod"]
 
 # Expose ports.
 #   - 27017: process
