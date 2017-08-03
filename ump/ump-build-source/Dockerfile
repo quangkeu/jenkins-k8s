@@ -13,6 +13,7 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/
 RUN apt-get -y update
 
 # Install Oracle Java 8
+RUN apt-get install software-properties-common python-software-properties
 RUN add-apt-repository ppa:openjdk-r/ppa
 RUN apt-get update
 RUN apt-get install openjdk-8-jdk openjdk-8-jre 
