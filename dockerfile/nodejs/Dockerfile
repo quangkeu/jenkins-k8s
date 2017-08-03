@@ -10,7 +10,7 @@ RUN apt-get install -y nodejs
 
 VOLUME ["/data"]
 
-ADD . /data
+#ADD . /data
 #RUN cd /data && npm install
 
 EXPOSE 8888
