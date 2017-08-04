@@ -30,7 +30,6 @@ spec:
         ports:
         - name: ump-app
           containerPort: 8080
-          hostPort: 8080
         env:
         - name: APP_TYPE
           value: "webapp"
