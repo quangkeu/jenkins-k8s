@@ -45,7 +45,10 @@ RUN sudo sed -i 's/127\.0\.0\.1/0\.0\.0\.0/g' /etc/mysql/my.cnf
 #RUN sudo service mysql restart
 #RUN sleep 3s
 RUN sudo service mysql restart && sleep 5s \
-&& mysql -uroot -proot -e "CREATE DATABASE ump;"
+&& mysql -uroot -proot -e "CREATE DATABASE ump;" \
+&& mysql -uroot -proot -e "CREATE USER 'root'@'%' IDENTIFIED BY 'root';" \
+&& mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';" \
+&& mysql -uroot -proot -e "FLUSH PRIVILEGES;"
 
 
 # Define mountable directories.
