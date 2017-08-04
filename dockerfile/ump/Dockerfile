@@ -95,14 +95,20 @@ RUN chmod 777 /usr/sbin/rabbitmqadmin \
 #RUN rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
 #RUN rabbitmqctl list_exchanges
 
-CMD /usr/sbin/rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
+#CMD /usr/sbin/rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
 EXPOSE 5672
 EXPOSE 15672
 
 # Install Genienacs
 RUN cd /opt/ && rm -rf ssdc-genieacs && git clone https://github.com/quangkeu/ssdc-genieacs.git
-RUN cd /opt/ssdc-genieacs && tar -xzf genieacs.tar.gz && chmod +x deploy_genieacs.sh
-RUN mkdir -p /home/ubuntu && mkdir -p /home/ubuntu/DeployGenieacs/logs && mv /opt/ssdc-genieacs/genieacs /home/ubuntu/
-RUN cd /opt/ssdc-genieacs && mv excute_on_qa.sh /home/ubuntu && chmod +x /home/ubuntu/excute_on_qa.sh
+RUN mkdir -p /home/ubuntu && mkdir -p /home/ubuntu/DeployGenieacs/logs
+RUN cd /opt/ssdc-genieacs \
+&& tar -xzf genieacs.tar.gz \
+&& mv /opt/ssdc-genieacs/genieacs /home/ubuntu/ \
+&& mv excute_on_qa.sh /home/ubuntu
+ 
+RUN chmod +x /opt/ssdc-genieacs/deploy_genieacs.sh \
+&& chmod +x /opt/ssdc-genieacs/entrypoint.sh \
+&& chmod +x /home/ubuntu/excute_on_qa.sh 
 
-CMD ./opt/ssdc-genieacs/deploy_genieacs.sh
+CMD ["./opt/ssdc-genieacs/entrypoint.sh"]
