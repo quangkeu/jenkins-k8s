@@ -10,7 +10,7 @@ RUN mkdir -p /data/db
 RUN echo "bind_ip = 0.0.0.0" >> /etc/mongodb.conf
 
 # Define mountable directories.
-VOLUME ["/data/db"]
+#VOLUME ["/data/db"]
 
 # Define working directory.
 #WORKDIR /data
