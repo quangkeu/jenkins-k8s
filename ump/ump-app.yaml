@@ -31,9 +31,9 @@ spec:
         - name: ump-app
           containerPort: 8080
         env:
-        - name: APP_TYPE
-          value: "webapp"
-        - name: APP_NAME
+        - name: WEBAPP_NAME
           value: "ump-webapp-1.0-20170802.075505-1"
+        - name: BACKEND_NAME
+          value: "ump-backend-1.0-20170802.075129-1"
         command: ["/bin/sh","-c"]
         args: ["/opt/ssdc-genieacs/entrypoint.sh"]
