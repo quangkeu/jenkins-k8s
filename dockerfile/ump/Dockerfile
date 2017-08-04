@@ -98,7 +98,7 @@ RUN mkdir -p /home/ubuntu && mkdir -p /home/ubuntu/DeployGenieacs/logs
 RUN cd /opt/ssdc-genieacs \
 && tar -xzf genieacs.tar.gz \
 && mv /opt/ssdc-genieacs/genieacs /home/ubuntu/ \
-&& mv excute_on_qa.sh /home/ubuntu
+&& mv execute_on_qa.sh /home/ubuntu/
  
 RUN chmod +x /opt/ssdc-genieacs/deploy_genieacs.sh \
 && chmod +x /opt/ssdc-genieacs/entrypoint.sh \
