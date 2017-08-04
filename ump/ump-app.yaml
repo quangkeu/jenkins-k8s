@@ -31,3 +31,5 @@ spec:
         - name: ump-app
           containerPort: 8080
           hostPort: 8080
+        command: ["/bin/sh","-c"]
+        args: ["/opt/ssdc-genieacs/entrypoint.sh","web-app","ump-webapp-1.0-20170802.075505-1"]
