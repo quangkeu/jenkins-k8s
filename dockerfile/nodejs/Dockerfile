@@ -8,7 +8,7 @@ RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_0.10 | sudo -E bash -
 RUN apt-get install -y nodejs
 
-VOLUME ["/data"]
+#VOLUME ["/data"]
 
 #ADD . /data
 #RUN cd /data && npm install
