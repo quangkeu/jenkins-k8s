@@ -83,7 +83,8 @@ RUN wget https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
 RUN apt-key add rabbitmq-signing-key-public.asc
 RUN apt-key adv --keyserver hkps.pool.sks-keyservers.net --recv-keys 0x6B73A36E6026DFCA
 RUN apt-get update
-RUN apt-get install -y rabbitmq-server
+RUN apt-get install -y rabbitmq-server python2.7
+RUN ln -s /usr/bin/python2.7 /usr/bin/python
 RUN cd /usr/sbin
 RUN rabbitmq-plugins enable rabbitmq_management
 RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git
@@ -92,10 +93,8 @@ RUN service rabbitmq-server restart \
 && curl -S http://localhost:15672/cli/rabbitmqadmin > /usr/sbin/rabbitmqadmin
 RUN chmod 777 /usr/sbin/rabbitmqadmin \
 && sleep 5s
-#RUN rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
+RUN rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
 #RUN rabbitmqctl list_exchanges
-
-#CMD /usr/sbin/rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
 EXPOSE 5672
 EXPOSE 15672
 
