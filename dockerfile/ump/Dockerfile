@@ -102,7 +102,7 @@ RUN cd /opt/ssdc-genieacs \
  
 RUN chmod +x /opt/ssdc-genieacs/deploy_genieacs.sh \
 && chmod +x /opt/ssdc-genieacs/entrypoint.sh \
-&& chmod +x /home/ubuntu/excute_on_qa.sh 
+&& chmod +x /home/ubuntu/execute_on_qa.sh 
 
 RUN service rabbitmq-server restart \
 && sleep 10s \
