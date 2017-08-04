@@ -11,7 +11,7 @@ RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_0.10 | sudo -E bash -
 RUN apt-get install -y nodejs
 
-EXPOSE 8888
+#EXPOSE 8888
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 \
 && echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' > /etc/apt/sources.list.d/mongodb.list \
@@ -33,8 +33,8 @@ RUN echo "bind_ip = 0.0.0.0" >> /etc/mongodb.conf
 # Expose ports.
 #   - 27017: process
 #   - 28017: http
-EXPOSE 27017
-EXPOSE 28017
+#EXPOSE 27017
+#EXPOSE 28017
 
 # Install MySQL
 #RUN ufw disable
@@ -58,7 +58,7 @@ RUN sudo service mysql restart && sleep 5s \
 #CMD ["mysqld_safe"]
 
 # Expose ports.
-EXPOSE 3306
+#EXPOSE 3306
 
 #RUN mysql -uroot -proot -e "CREATE DATABASE ump"
 
@@ -73,7 +73,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y redis-se
  && sed 's/^# unixsocketperm 755/unixsocketperm 777/' -i /etc/redis/redis.conf \
  && sed '/^logfile/d' -i /etc/redis/redis.conf && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 6379/tcp
+#EXPOSE 6379/tcp
 
 
 # Install RabbitMQ
@@ -89,8 +89,8 @@ RUN rabbitmq-plugins enable rabbitmq_management
 #RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git
 
 #RUN rabbitmqctl list_exchanges
-EXPOSE 5672
-EXPOSE 15672
+#EXPOSE 5672
+#EXPOSE 15672
 
 # Install Genienacs
 RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git
@@ -111,3 +111,5 @@ RUN service rabbitmq-server restart \
 && rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
 
 CMD ["./opt/ssdc-genieacs/entrypoint.sh"]
+
+EXPOSE 8080
