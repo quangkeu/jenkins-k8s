@@ -86,18 +86,14 @@ RUN apt-get install -y rabbitmq-server python2.7 \
 && ln -s /usr/bin/python2.7 /usr/bin/python
 RUN cd /usr/sbin
 RUN rabbitmq-plugins enable rabbitmq_management
-RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git
-RUN service rabbitmq-server restart \
-&& sleep 10s \
-&& curl -S http://localhost:15672/cli/rabbitmqadmin > /usr/sbin/rabbitmqadmin \
-&& chmod 777 /usr/sbin/rabbitmqadmin \
-&& rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
+#RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git
+
 #RUN rabbitmqctl list_exchanges
 EXPOSE 5672
 EXPOSE 15672
 
 # Install Genienacs
-#RUN cd /opt/ && rm -rf ssdc-genieacs && git clone https://github.com/quangkeu/ssdc-genieacs.git
+RUN cd /opt/ && rm -rf ssdc-genieacs && git clone https://github.com/quangkeu/ssdc-genieacs.git
 RUN mkdir -p /home/ubuntu && mkdir -p /home/ubuntu/DeployGenieacs/logs
 RUN cd /opt/ssdc-genieacs \
 && tar -xzf genieacs.tar.gz \
@@ -107,5 +103,11 @@ RUN cd /opt/ssdc-genieacs \
 RUN chmod +x /opt/ssdc-genieacs/deploy_genieacs.sh \
 && chmod +x /opt/ssdc-genieacs/entrypoint.sh \
 && chmod +x /home/ubuntu/excute_on_qa.sh 
+
+RUN service rabbitmq-server restart \
+&& sleep 10s \
+&& curl -S http://localhost:15672/cli/rabbitmqadmin > /usr/sbin/rabbitmqadmin \
+&& chmod 777 /usr/sbin/rabbitmqadmin \
+&& rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
 
 CMD ["./opt/ssdc-genieacs/entrypoint.sh"]
