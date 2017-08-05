@@ -42,14 +42,6 @@ RUN echo "mysql-server mysql-server/root_password select root" | debconf-set-sel
 RUN echo "mysql-server mysql-server/root_password_again select root" | debconf-set-selections
 RUN apt-get install -y  mysql-server-5.5
 RUN sudo sed -i 's/127\.0\.0\.1/0\.0\.0\.0/g' /etc/mysql/my.cnf
-#RUN sudo service mysql restart
-#RUN sleep 3s
-RUN sudo service mysql restart && sleep 5s \
-&& mysql -uroot -proot -e "CREATE DATABASE ump;" \
-&& mysql -uroot -proot -e "CREATE USER 'root'@'%' IDENTIFIED BY 'root';" \
-&& mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';" \
-&& mysql -uroot -proot -e "FLUSH PRIVILEGES;"
-
 
 # Define mountable directories.
 #VOLUME ["/etc/mysql", "/var/lib/mysql"]
@@ -62,8 +54,6 @@ RUN sudo service mysql restart && sleep 5s \
 
 # Expose ports.
 #EXPOSE 3306
-
-#RUN mysql -uroot -proot -e "CREATE DATABASE ump"
 
 # Install Redis
 ENV REDIS_USER=redis \
@@ -95,6 +85,18 @@ RUN rabbitmq-plugins enable rabbitmq_management
 #EXPOSE 5672
 #EXPOSE 15672
 
+RUN sudo service mysql restart && sleep 10s \
+&& mysql -uroot -proot -e "CREATE DATABASE ump;" 
+#&& mysql -uroot -proot -e "CREATE USER 'root'@'%' IDENTIFIED BY 'root';" \
+#&& mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';" \
+#&& mysql -uroot -proot -e "FLUSH PRIVILEGES;"
+
+RUN service rabbitmq-server restart \
+&& sleep 10s \
+&& curl -S http://localhost:15672/cli/rabbitmqadmin > /usr/sbin/rabbitmqadmin \
+&& chmod 777 /usr/sbin/rabbitmqadmin \
+&& rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
+
 # Install Genienacs
 RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git
 RUN mkdir -p /home/ubuntu && mkdir -p /home/ubuntu/DeployGenieacs/logs
@@ -106,12 +108,6 @@ RUN cd /opt/ssdc-genieacs \
 RUN chmod +x /opt/ssdc-genieacs/deploy_genieacs.sh \
 && chmod +x /opt/ssdc-genieacs/entrypoint.sh \
 && chmod +x /home/ubuntu/execute_on_qa.sh 
-
-RUN service rabbitmq-server restart \
-&& sleep 10s \
-&& curl -S http://localhost:15672/cli/rabbitmqadmin > /usr/sbin/rabbitmqadmin \
-&& chmod 777 /usr/sbin/rabbitmqadmin \
-&& rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
 
 CMD ["./opt/ssdc-genieacs/entrypoint.sh"]
 
