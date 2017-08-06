@@ -5,6 +5,7 @@ metadata:
     name: ump-app
   name: ump-app
 spec:
+  type: NodePort
   ports:
     - port: 8080
       targetPort: 8080
