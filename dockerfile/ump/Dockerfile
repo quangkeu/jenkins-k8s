@@ -85,7 +85,7 @@ RUN rabbitmq-plugins enable rabbitmq_management
 #EXPOSE 5672
 #EXPOSE 15672
 
-RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git
+
 
 RUN sudo service mysql restart && sleep 10s \
 && mysql -uroot -proot -e "CREATE DATABASE ump;" 
@@ -100,8 +100,8 @@ RUN service rabbitmq-server restart \
 #&& rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
 
 # Install Genienacs
-
-RUN mkdir -p /home/ubuntu && mkdir -p /home/ubuntu/DeployGenieacs/logs
+RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git \
+&& mkdir -p /home/ubuntu && mkdir -p /home/ubuntu/DeployGenieacs/logs
 RUN cd /opt/ssdc-genieacs \
 && tar -xzf genieacs.tar.gz \
 && mv /opt/ssdc-genieacs/genieacs /home/ubuntu/ \
@@ -110,8 +110,6 @@ RUN cd /opt/ssdc-genieacs \
 RUN chmod +x /opt/ssdc-genieacs/deploy_genieacs.sh \
 && chmod +x /opt/ssdc-genieacs/entrypoint.sh \
 && chmod +x /home/ubuntu/execute_on_qa.sh 
-
-
 
 CMD ["./opt/ssdc-genieacs/entrypoint.sh"]
 
