@@ -11,8 +11,7 @@ RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_0.10 | sudo -E bash -
 RUN apt-get install -y nodejs
 
-#EXPOSE 8888
-
+# Install Mongodb
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 \
 && echo 'deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen' > /etc/apt/sources.list.d/mongodb.list \
 && apt-get update \
@@ -21,39 +20,12 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 \
 RUN mkdir -p /data/db
 RUN echo "bind_ip = 0.0.0.0" >> /etc/mongodb.conf
 
-# Define mountable directories.
-#VOLUME ["/data/db"]
-
-# Define working directory.
-#WORKDIR /data
-
-# Define default command.
-#CMD ["mongod"]
-
-# Expose ports.
-#   - 27017: process
-#   - 28017: http
-#EXPOSE 27017
-#EXPOSE 28017
-
 # Install MySQL
 #RUN ufw disable
 RUN echo "mysql-server mysql-server/root_password select root" | debconf-set-selections
 RUN echo "mysql-server mysql-server/root_password_again select root" | debconf-set-selections
 RUN apt-get install -y  mysql-server-5.5
 RUN sudo sed -i 's/127\.0\.0\.1/0\.0\.0\.0/g' /etc/mysql/my.cnf
-
-# Define mountable directories.
-#VOLUME ["/etc/mysql", "/var/lib/mysql"]
-
-# Define working directory.
-#WORKDIR /data
-
-# Define default command.
-#CMD ["mysqld_safe"]
-
-# Expose ports.
-#EXPOSE 3306
 
 # Install Redis
 ENV REDIS_USER=redis \
@@ -66,9 +38,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y redis-se
  && sed 's/^# unixsocketperm 755/unixsocketperm 777/' -i /etc/redis/redis.conf \
  && sed '/^logfile/d' -i /etc/redis/redis.conf && rm -rf /var/lib/apt/lists/*
 
-#EXPOSE 6379/tcp
-
-
 # Install RabbitMQ
 RUN echo "deb http://www.rabbitmq.com/debian testing main" >> /etc/apt/sources.list
 RUN wget https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
@@ -79,12 +48,6 @@ RUN apt-get install -y rabbitmq-server python2.7 \
 && ln -s /usr/bin/python2.7 /usr/bin/python
 RUN cd /usr/sbin
 RUN rabbitmq-plugins enable rabbitmq_management
-#RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git
-
-#RUN rabbitmqctl list_exchanges
-#EXPOSE 5672
-#EXPOSE 15672
-
 
 
 RUN sudo service mysql restart && sleep 10s \
