@@ -88,16 +88,16 @@ RUN rabbitmq-plugins enable rabbitmq_management
 RUN cd /opt/ && git clone https://github.com/quangkeu/ssdc-genieacs.git
 
 RUN sudo service mysql restart && sleep 10s \
-&& mysql -uroot -proot -e "CREATE DATABASE ump;" \
-&& mysql -uroot -proot -e "CREATE USER 'root'@'%' IDENTIFIED BY 'root';" \
-&& mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';" \
-&& mysql -uroot -proot -e "FLUSH PRIVILEGES;"
+&& mysql -uroot -proot -e "CREATE DATABASE ump;" 
+#&& mysql -uroot -proot -e "CREATE USER 'root'@'%' IDENTIFIED BY 'root';" \
+#&& mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';" \
+#&& mysql -uroot -proot -e "FLUSH PRIVILEGES;"
 
 RUN service rabbitmq-server restart \
 && sleep 10s \
 && curl -S http://localhost:15672/cli/rabbitmqadmin > /usr/sbin/rabbitmqadmin \
-&& chmod 777 /usr/sbin/rabbitmqadmin \
-&& rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
+&& chmod 777 /usr/sbin/rabbitmqadmin 
+#&& rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
 
 # Install Genienacs
 
