@@ -5,6 +5,7 @@ metadata:
     name: ump-app
   name: ump-app
 spec:
+  namespace: jenkins
   type: NodePort
   ports:
     - port: 8080
@@ -19,6 +20,7 @@ metadata:
     name: ump-webapp
   name: ump-rc
 spec:
+  namespace: jenkins
   replicas: 1
   template:
     metadata:
@@ -37,4 +39,4 @@ spec:
         - name: BACKEND_NAME
           value: "ump-backend-1.0-20170802.075129-1"
         command: ["/bin/sh","-c"]
-        args: ["cat"]
+        args: ["while true; do sleep 1000; done"]
