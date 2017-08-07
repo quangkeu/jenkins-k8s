@@ -37,4 +37,4 @@ spec:
         - name: BACKEND_NAME
           value: "ump-backend-1.0-20170802.075129-1"
         command: ["/bin/sh","-c"]
-        args: cat
+        args: ["cat"]
