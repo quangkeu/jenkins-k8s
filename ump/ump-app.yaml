@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: jenkins
   labels:
     name: ump-app
   name: ump-app
 spec:
-  namespace: jenkins
   type: NodePort
   ports:
     - port: 8080
@@ -16,11 +16,11 @@ spec:
 apiVersion: v1
 kind: ReplicationController
 metadata:
+  namespace: jenkins
   labels:
     name: ump-webapp
   name: ump-rc
 spec:
-  namespace: jenkins
   replicas: 1
   template:
     metadata:
