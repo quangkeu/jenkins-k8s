@@ -28,7 +28,7 @@ spec:
         name: ump-webapp
     spec:
       containers:
-      - image: 10.84.20.62:8082/admin/ump-deploy-v1
+      - image: 10.84.20.62:8082/admin/ump-deploy-v1.1
         name: ump-app
         ports:
         - name: ump-app
@@ -39,4 +39,4 @@ spec:
         - name: BACKEND_NAME
           value: "ump-backend-1.0-20170802.075129-1"
         command: ["/bin/sh","-c"]
-        args: ["./entrypoint.sh"]
+        args: ["./home/ubuntu/ump-conf/entrypoint.sh"]
