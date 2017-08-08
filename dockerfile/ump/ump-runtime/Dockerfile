@@ -92,3 +92,5 @@ RUN service rabbitmq-server restart \
 && curl -S http://localhost:15672/cli/rabbitmqadmin > /usr/sbin/rabbitmqadmin \
 && chmod 777 /usr/sbin/rabbitmqadmin 
 #&& rabbitmqadmin -q import /opt/ssdc-genieacs/rabbit.config
+
+RUN apt-get install -y ca-certificates-java && update-ca-certificates -f
