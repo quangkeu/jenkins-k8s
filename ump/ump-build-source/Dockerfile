@@ -2,9 +2,6 @@ FROM ubuntu:14.04
 
 MAINTAINER QuangNL
 
-# Update software repository
-RUN apt-get update
-
 # Install git
 RUN apt-get install -y git
 
