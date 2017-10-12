@@ -14,8 +14,8 @@ RUN apt-get -y update
 RUN apt-get install software-properties-common python-software-properties
 RUN add-apt-repository ppa:openjdk-r/ppa
 RUN apt-get update
-RUN apt-get install openjdk-8-jdk openjdk-8-jre 
-RUN export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ 
+RUN apt-get install -y openjdk-8-jdk openjdk-8-jre && \
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ 
 
 # Clean Up APT when finished
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
