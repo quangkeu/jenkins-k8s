@@ -4,13 +4,13 @@ MAINTAINER QuangNL
 
 # Install git
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" >> /etc/apt/sources.list && \
-apt-get update –y && \
+apt-get update -y && \
 apt-get install -y git
 
 # Install Oracle Java 8
 RUN apt-get install software-properties-common python-software-properties && \
 add-apt-repository ppa:openjdk-r/ppa && \
-apt-get update –y && \
+apt-get update -y && \
 apt-get install -y openjdk-8-jdk openjdk-8-jre && \
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ 
 
@@ -18,7 +18,7 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Update dpkg repositories and install wget
-RUN apt-get update –y && \
+RUN apt-get update -y && \
 apt-get install -y wget
 
 # Get maven 3.3.9
