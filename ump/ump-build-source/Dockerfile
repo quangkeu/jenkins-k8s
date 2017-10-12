@@ -4,14 +4,14 @@ MAINTAINER QuangNL
 
 # Install git
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" >> /etc/apt/sources.list
-RUN apt-get update -y
-RUN apt-get install -y git
+RUN apt-get update -y && \
+apt-get install -y git
 
 # Install Oracle Java 8
 RUN apt-get install software-properties-common python-software-properties
-RUN add-apt-repository ppa:openjdk-r/ppa
-RUN apt-get update -y
-RUN apt-get install -y openjdk-8-jdk openjdk-8-jre && \
+RUN add-apt-repository ppa:openjdk-r/ppa && \
+apt-get update -y && \
+apt-get install -y openjdk-8-jdk openjdk-8-jre && \
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ 
 
 # Clean Up APT when finished
