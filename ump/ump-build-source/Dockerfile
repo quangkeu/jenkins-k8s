@@ -1,6 +1,7 @@
 FROM ubuntu:14.04
 
 MAINTAINER QuangNL
+USER root
 
 # Install git
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" >> /etc/apt/sources.list && \
