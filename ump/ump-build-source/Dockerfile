@@ -9,7 +9,7 @@ apt-get update -y && \
 apt-get install -y git
 
 # Install Oracle Java 8
-RUN apt-get install software-properties-common python-software-properties && \
+RUN apt-get install software-properties-common python-software-properties -y && \
 add-apt-repository ppa:openjdk-r/ppa && \
 apt-get update -y && \
 apt-get install -y openjdk-8-jdk openjdk-8-jre && \
