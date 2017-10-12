@@ -3,7 +3,7 @@ FROM ubuntu:14.04
 MAINTAINER QuangNL
 
 # Install git
-RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
+RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" >> /etc/apt/sources.list
 RUN apt-get update -y
 RUN apt-get install -y git
 
