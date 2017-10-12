@@ -3,17 +3,14 @@ FROM ubuntu:14.04
 MAINTAINER QuangNL
 
 # Install git
-RUN apt-get update 
-RUN apt-get install -y git
-
-# Update the package repository
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
-RUN apt-get -y update
+RUN apt-get update -y
+RUN apt-get install -y git
 
 # Install Oracle Java 8
 RUN apt-get install software-properties-common python-software-properties
 RUN add-apt-repository ppa:openjdk-r/ppa
-RUN apt-get update
+RUN apt-get update -y
 RUN apt-get install -y openjdk-8-jdk openjdk-8-jre && \
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ 
 
@@ -21,7 +18,7 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Update dpkg repositories
-RUN apt-get update 
+RUN apt-get update -y
 
 # Install wget
 RUN apt-get install -y wget
